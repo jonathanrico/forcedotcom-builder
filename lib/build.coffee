@@ -37,13 +37,21 @@ module.exports =
       cmd = @buildCommand(buildTarget)
     return if !cmd
 
-    if(atom.config.get('build.arguments'))
-      args = (atom.config.get('build.arguments').split(' ')).filter((e) -> '' != e)
+    args = {
+      encoding: 'utf8',
+      timeout: 0,
+      maxBuffer: 2000*1024, #increased buffer size
+      killSignal: 'SIGTERM',
+      cwd: null,
+      env: null
+    }
 
     @child = child_process.exec(cmd,args)
+
     @child.stdout.on 'data', @buildView.append
     @child.stderr.on 'data', @buildView.append
     @child.on 'close', (exitCode) =>
+      console.log('exitCode is : '+exitCode)
       @buildView.buildFinished(0 == exitCode)
       @child = null
 
