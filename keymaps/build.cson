@@ -1,0 +1,5 @@
+'.platform-darwin':
+  'alt-cmd-b': 'build:sf-deploy-file'
+
+'.build':
+  'escape': 'build:stop'
