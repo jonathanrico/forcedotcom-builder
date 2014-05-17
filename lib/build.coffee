@@ -105,7 +105,7 @@ module.exports =
               metaDataType = 'ApexTrigger'
             when 'pages'
               metaDataType = 'ApexPage'
-            when 'component'
+            when 'components'
               metaDataType = 'ApexComponent'
             when 'staticresources'
               metaDataType = 'StaticResource'
