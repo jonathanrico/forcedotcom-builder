@@ -101,7 +101,7 @@ module.exports =
           switch folderName[0]
             when 'classes'
               metaDataType = 'ApexClass'
-            when 'trigger'
+            when 'triggers'
               metaDataType = 'ApexTrigger'
             when 'pages'
               metaDataType = 'ApexPage'
@@ -124,7 +124,7 @@ module.exports =
             when 'labels'
               metaDataType = 'CustomLabels'
             when 'workflows'
-              metaDataType = 'WorkflowRule'
+              metaDataType = 'Workflow'
             when 'remoteSiteSettings'
               metaDataType = 'RemoteSiteSetting'
             when 'permissionsets'
@@ -137,6 +137,20 @@ module.exports =
               metaDataType = 'Group'
             when 'objectTranslations'
               metaDataType = 'CustomObjectTranslation'
+            when 'communities'
+              metaDataType = 'Network'
+            when 'reportTypes'
+              metaDataType = 'ReportType'
+            when 'settings'
+              metaDataType = 'Settings'
+            when 'assignmentRules'
+              metaDataType = 'AssignmentRule'
+            when 'approvalProcesses'
+              metaDataType = 'ApprovalProcess'
+            when 'escalationRules'
+              metaDataType = 'EscalationRule'
+            when 'flows'
+              metaDataType = 'Flow'
             else
               metaDataType = null
 
