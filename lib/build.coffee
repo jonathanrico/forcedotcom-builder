@@ -17,6 +17,7 @@ module.exports =
     atom.workspaceView.command "build:sf-deploy-static-res", => @deployStaticRes()
     atom.workspaceView.command "build:sf-deploy-apex", => @deployApex()
     atom.workspaceView.command "build:sf-deploy-visualforce", => @deployVisualforce()
+    atom.workspaceView.command "build:sf-retrieve-unpackaged", => @retrieveUnpackaged()
     atom.workspaceView.command "build:sf-abort", => @stop()
 
   deactivate: ->
@@ -79,6 +80,10 @@ module.exports =
   deployVisualforce: ->
     clearTimeout @finishedTimer
     if @child then @abort(=> @startNewBuild('deploy-visualforce')) else @startNewBuild('deploy-visualforce')
+
+  retrieveUnpackaged: ->
+    clearTimeout @finishedTimer
+    if @child then @abort(=> @startNewBuild('retrieve-unpackaged')) else @startNewBuild('retrieve-unpackaged')
 
   deploySingleFile: ->
     if(@isDeployRunning())
@@ -151,6 +156,8 @@ module.exports =
               metaDataType = 'EscalationRule'
             when 'flows'
               metaDataType = 'Flow'
+            when 'aura'
+              metaDataType = 'AuraDefinitionBundle'
             else
               metaDataType = null
 
