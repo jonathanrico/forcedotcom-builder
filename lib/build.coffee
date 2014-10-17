@@ -28,7 +28,11 @@ module.exports =
     return cmd
 
   buildSingleFileCommand:(target,params) ->
-    cmd = 'ant '+target+' -Ddeploy.single.folderName='+params[2]+' -Ddeploy.single.fileName="'+params[0]+'" -Ddeploy.single.metadataType='+params[1]+' -f '+@root + '/build/build.xml'
+    cmd = 'ant '+target
+    if params.length > 3
+        cmd += ' -Ddeploy.single.subFolderName='+params[3]
+    cmd += ' -Ddeploy.single.folderName='+params[2]+' -Ddeploy.single.fileName="'+params[0]+'" -Ddeploy.single.metadataType='+params[1]+' -f '
+    cmd += @root + '/build/build.xml'
     return cmd
 
   startNewBuild:(buildTarget,params) ->
@@ -158,11 +162,15 @@ module.exports =
               metaDataType = 'Flow'
             when 'aura'
               metaDataType = 'AuraDefinitionBundle'
+            when 'documents'
+              metaDataType = 'Document'
             else
               metaDataType = null
 
           if(metaDataType != null)
             params = [fileNameParsed,metaDataType,folderName[0]]
+            if metaDataType == 'AuraDefinitionBundle' || metaDataType == 'Document'
+                params.push(folderName[1])
             if @child then @abort(=> @startNewBuild('deploy-single-file',params)) else @startNewBuild('deploy-single-file',params)
           else
             @buildView.buildUnsupported()
