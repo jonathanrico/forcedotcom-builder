@@ -1,5 +1,6 @@
 '.platform-darwin':
   'alt-cmd-b': 'build:sf-deploy-file'
+  'alt-cmd-r': 'build:sf-retrieve-unpackaged-file'
 
 '.build':
   'escape': 'build:stop'

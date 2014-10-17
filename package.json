@@ -11,7 +11,8 @@
     "build:sf-deploy-apex",
     "build:sf-deploy-visualforce",
     "build:sf-abort",
-    "build:sf-retrieve-unpackaged"
+    "build:sf-retrieve-unpackaged",
+    "build:sf-retrieve-unpackaged-file"
   ],
   "repository": "https://github.com/jonathanrico/forcedotcom-builder",
   "license": "MIT",

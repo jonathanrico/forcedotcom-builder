@@ -18,6 +18,7 @@ module.exports =
     atom.workspaceView.command "build:sf-deploy-apex", => @deployApex()
     atom.workspaceView.command "build:sf-deploy-visualforce", => @deployVisualforce()
     atom.workspaceView.command "build:sf-retrieve-unpackaged", => @retrieveUnpackaged()
+    atom.workspaceView.command "build:sf-retrieve-unpackaged-file", => @retrieveSingleFile()
     atom.workspaceView.command "build:sf-abort", => @stop()
 
   deactivate: ->
@@ -29,9 +30,10 @@ module.exports =
 
   buildSingleFileCommand:(target,params) ->
     cmd = 'ant '+target
+    optype = if (target == 'deploy-single-file') then 'deploy' else 'retrieve'
     if params.length > 3
-        cmd += ' -Ddeploy.single.subFolderName='+params[3]
-    cmd += ' -Ddeploy.single.folderName='+params[2]+' -Ddeploy.single.fileName="'+params[0]+'" -Ddeploy.single.metadataType='+params[1]+' -f '
+        cmd += ' -D'+optype+'.single.subFolderName='+params[3]
+    cmd += ' -D'+optype+'.single.folderName='+params[2]+' -D'+optype+'.single.fileName="'+params[0]+'" -D'+optype+'.single.metadataType='+params[1]+' -f '
     cmd += @root + '/build/build.xml'
     return cmd
 
@@ -90,6 +92,12 @@ module.exports =
     if @child then @abort(=> @startNewBuild('retrieve-unpackaged')) else @startNewBuild('retrieve-unpackaged')
 
   deploySingleFile: ->
+    @processSingleFile('deploy')
+
+  retrieveSingleFile: ->
+    @processSingleFile('retrieve')
+
+  processSingleFile: (optype) ->
     if(@isDeployRunning())
       clearTimeout @finishedTimer
       if(atom.workspace.getActiveEditor().buffer?.file?)
@@ -171,7 +179,7 @@ module.exports =
             params = [fileNameParsed,metaDataType,folderName[0]]
             if metaDataType == 'AuraDefinitionBundle' || metaDataType == 'Document'
                 params.push(folderName[1])
-            if @child then @abort(=> @startNewBuild('deploy-single-file',params)) else @startNewBuild('deploy-single-file',params)
+            if @child then @abort(=> @startNewBuild(optype+'-single-file',params)) else @startNewBuild(optype+'-single-file',params)
           else
             @buildView.buildUnsupported()
 
