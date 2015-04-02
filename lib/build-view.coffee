@@ -4,7 +4,7 @@ module.exports =
 class BuildView
 
   constructor: ->
-    @messagepanel = new MessagePanelView title: 'Force.com Build', rawTitle: false
+    @messagepanel = new MessagePanelView title: 'Force.com Build', rawTitle: false, recentMessagesAtTop: true
 
   addMessage: (msg, type) =>
     @messagepanel.add new PlainMessageView message: msg, className: type

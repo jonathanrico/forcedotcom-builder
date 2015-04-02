@@ -12,14 +12,15 @@ module.exports =
   activate: (state) ->
     @root = atom.project.getPath()
     @buildView = new BuildView()
-    atom.workspaceView.command "build:sf-deploy-file", => @deploySingleFile()
-    atom.workspaceView.command "build:sf-deploy", => @deploy()
-    atom.workspaceView.command "build:sf-deploy-static-res", => @deployStaticRes()
-    atom.workspaceView.command "build:sf-deploy-apex", => @deployApex()
-    atom.workspaceView.command "build:sf-deploy-visualforce", => @deployVisualforce()
-    atom.workspaceView.command "build:sf-retrieve-unpackaged", => @retrieveUnpackaged()
-    atom.workspaceView.command "build:sf-retrieve-unpackaged-file", => @retrieveSingleFile()
-    atom.workspaceView.command "build:sf-abort", => @stop()
+
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy', => @deploy()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @deployStaticRes()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @deployApex()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @deployVisualforce()
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @retrieveUnpackaged()
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @retrieveSingleFile()
+    atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
 
   deactivate: ->
     @child.kill('SIGKILL')
