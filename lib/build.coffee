@@ -104,7 +104,7 @@ module.exports =
       if(atom.workspace.getActiveEditor().buffer?.file?)
 
         path = atom.workspace.getActiveEditor().buffer.file.path
-        projectPath = @root+'/app/src/'
+        projectPath = @root+'/src/'
         pathHeRegex = ///#{projectPath}///
         if(path.match(pathHeRegex))
           fileBaseName = atom.workspace.getActiveEditor().buffer.file.getBaseName()

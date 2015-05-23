@@ -61,40 +61,40 @@
   {
     'captures':
       '1':
-        'name': 'keyword.other.package.java'
+        'name': 'keyword.other.package.apex'
       '2':
-        'name': 'storage.modifier.package.java'
+        'name': 'storage.modifier.package.apex'
       '3':
-        'name': 'punctuation.terminator.java'
+        'name': 'punctuation.terminator.apex'
     'match': '^\\s*(package)\\b(?:\\s*([^ ;$]+)\\s*(;)?)?'
-    'name': 'meta.package.java'
+    'name': 'meta.package.apex'
   }
   {
     'begin': '(import static)\\b\\s*'
     'beginCaptures':
       '1':
-        'name': 'keyword.other.import.static.java'
+        'name': 'keyword.other.import.static.apex'
     'captures':
       '1':
-        'name': 'keyword.other.import.java'
+        'name': 'keyword.other.import.apex'
       '2':
-        'name': 'storage.modifier.import.java'
+        'name': 'storage.modifier.import.apex'
       '3':
-        'name': 'punctuation.terminator.java'
-    'contentName': 'storage.modifier.import.java'
+        'name': 'punctuation.terminator.apex'
+    'contentName': 'storage.modifier.import.apex'
     'end': '\\s*(?:$|(;))'
     'endCaptures':
       '1':
-        'name': 'punctuation.terminator.java'
-    'name': 'meta.import.java'
+        'name': 'punctuation.terminator.apex'
+    'name': 'meta.import.apex'
     'patterns': [
       {
         'match': '\\.'
-        'name': 'punctuation.separator.java'
+        'name': 'punctuation.separator.apex'
       }
       {
         'match': '\\s'
-        'name': 'invalid.illegal.character_not_allowed_here.java'
+        'name': 'invalid.illegal.character_not_allowed_here.apex'
       }
     ]
   }
@@ -102,28 +102,28 @@
     'begin': '(import)\\b\\s*'
     'beginCaptures':
       '1':
-        'name': 'keyword.other.import.java'
+        'name': 'keyword.other.import.apex'
     'captures':
       '1':
-        'name': 'keyword.other.import.java'
+        'name': 'keyword.other.import.apex'
       '2':
-        'name': 'storage.modifier.import.java'
+        'name': 'storage.modifier.import.apex'
       '3':
-        'name': 'punctuation.terminator.java'
-    'contentName': 'storage.modifier.import.java'
+        'name': 'punctuation.terminator.apex'
+    'contentName': 'storage.modifier.import.apex'
     'end': '\\s*(?:$|(;))'
     'endCaptures':
       '1':
-        'name': 'punctuation.terminator.java'
-    'name': 'meta.import.java'
+        'name': 'punctuation.terminator.apex'
+    'name': 'meta.import.apex'
     'patterns': [
       {
         'match': '\\.'
-        'name': 'punctuation.separator.java'
+        'name': 'punctuation.separator.apex'
       }
       {
         'match': '\\s'
-        'name': 'invalid.illegal.character_not_allowed_here.java'
+        'name': 'invalid.illegal.character_not_allowed_here.apex'
       }
     ]
   }
@@ -158,21 +158,21 @@
         'begin': '(@[^ (]+)(\\()'
         'beginCaptures':
           '1':
-            'name': 'storage.type.annotation.java'
+            'name': 'storage.type.annotation.apex'
           '2':
-            'name': 'punctuation.definition.annotation-arguments.begin.java'
+            'name': 'punctuation.definition.annotation-arguments.begin.apex'
         'end': '(\\))'
         'endCaptures':
           '1':
-            'name': 'punctuation.definition.annotation-arguments.end.java'
-        'name': 'meta.declaration.annotation.java'
+            'name': 'punctuation.definition.annotation-arguments.end.apex'
+        'name': 'meta.declaration.annotation.apex'
         'patterns': [
           {
             'captures':
               '1':
-                'name': 'constant.other.key.java'
+                'name': 'constant.other.key.apex'
               '2':
-                'name': 'keyword.operator.assignment.java'
+                'name': 'keyword.operator.assignment.apex'
             'match': '(\\w*)\\s*(=)'
           }
           {
@@ -180,31 +180,31 @@
           }
           {
             'match': ','
-            'name': 'punctuation.seperator.property.java'
+            'name': 'punctuation.seperator.property.apex'
           }
         ]
       }
       {
         'match': '@\\w*'
-        'name': 'storage.type.annotation.java'
+        'name': 'storage.type.annotation.apex'
       }
     ]
   'anonymous-classes-and-new':
     'begin': '\\b(?<!\\.)new\\b'
     'beginCaptures':
       '0':
-        'name': 'keyword.control.new.java'
+        'name': 'keyword.control.new.apex'
     'end': '(?<=\\)|\\])(?!\\s*{)|(?<=})|(?=;)'
     'patterns': [
       {
         'begin': '(\\w+)\\s*(?=\\[)'
         'beginCaptures':
           '1':
-            'name': 'storage.type.java'
+            'name': 'storage.type.apex'
         'end': '(})|(?=\\s*(?:,|;|\\)))'
         'endCaptures':
           '1':
-            'name': 'punctuation.section.block.end.java'
+            'name': 'punctuation.section.block.end.apex'
         'patterns': [
           {
             'begin': '\\['
@@ -219,7 +219,7 @@
             'begin': '{'
             'beginCaptures':
               '0':
-                'name': 'punctuation.section.block.begin.java'
+                'name': 'punctuation.section.block.begin.apex'
             'end': '(?=})'
             'patterns': [
               {
@@ -240,7 +240,7 @@
             'begin': '\\('
             'beginCaptures':
               '1':
-                'name': 'storage.type.java'
+                'name': 'storage.type.apex'
             'end': '\\)'
             'patterns': [
               {
@@ -254,12 +254,12 @@
         'begin': '{'
         'beginCaptures':
           '0':
-            'name': 'punctuation.section.inner-class.begin.java'
+            'name': 'punctuation.section.inner-class.begin.apex'
         'end': '}'
         'endCaptures':
           '0':
-            'name': 'punctuation.section.inner-class.end.java'
-        'name': 'meta.inner-class.java'
+            'name': 'punctuation.section.inner-class.end.apex'
+        'name': 'meta.inner-class.apex'
         'patterns': [
           {
             'include': '#class-body'
@@ -273,13 +273,13 @@
         'begin': '\\b(assert)\\s'
         'beginCaptures':
           '1':
-            'name': 'keyword.control.assert.java'
+            'name': 'keyword.control.assert.apex'
         'end': '$'
-        'name': 'meta.declaration.assertion.java'
+        'name': 'meta.declaration.assertion.apex'
         'patterns': [
           {
             'match': ':'
-            'name': 'keyword.operator.assert.expression-seperator.java'
+            'name': 'keyword.operator.assert.expression-seperator.apex'
           }
           {
             'include': '#code'
@@ -292,8 +292,8 @@
     'end': '}'
     'endCaptures':
       '0':
-        'name': 'punctuation.section.class.end.java'
-    'name': 'meta.class.java'
+        'name': 'punctuation.section.class.end.apex'
+    'name': 'meta.class.apex'
     'patterns': [
       {
         'include': '#storage-modifiers'
@@ -304,19 +304,19 @@
       {
         'captures':
           '1':
-            'name': 'storage.modifier.java'
+            'name': 'storage.modifier.apex'
           '2':
-            'name': 'entity.name.type.class.java'
+            'name': 'entity.name.type.class.apex'
         'match': '(class|(?:@)?interface|enum)\\s+(\\w+)'
-        'name': 'meta.class.identifier.java'
+        'name': 'meta.class.identifier.apex'
       }
       {
         'begin': 'extends'
         'beginCaptures':
           '0':
-            'name': 'storage.modifier.extends.java'
+            'name': 'storage.modifier.extends.apex'
         'end': '(?={|implements)'
-        'name': 'meta.definition.class.inherited.classes.java'
+        'name': 'meta.definition.class.inherited.classes.apex'
         'patterns': [
           {
             'include': '#object-types-inherited'
@@ -330,9 +330,9 @@
         'begin': '(implements)\\s'
         'beginCaptures':
           '1':
-            'name': 'storage.modifier.implements.java'
+            'name': 'storage.modifier.implements.apex'
         'end': '(?=\\s*extends|\\{)'
-        'name': 'meta.definition.class.implemented.interfaces.java'
+        'name': 'meta.definition.class.implemented.interfaces.apex'
         'patterns': [
           {
             'include': '#object-types-inherited'
@@ -346,9 +346,9 @@
         'begin': '{'
         'beginCaptures':
           '0':
-            'name': 'punctuation.section.class.begin.java'
+            'name': 'punctuation.section.class.begin.apex'
         'end': '(?=})'
-        'name': 'meta.class.body.java'
+        'name': 'meta.class.body.apex'
         'patterns': [
           {
             'include': '#class-body'
@@ -398,11 +398,11 @@
         'begin': '{'
         'beginCaptures':
           '0':
-            'name': 'punctuation.section.block.begin.java'
+            'name': 'punctuation.section.block.begin.apex'
         'end': '}'
         'endCaptures':
           '0':
-            'name': 'punctuation.section.block.end.java'
+            'name': 'punctuation.section.block.end.apex'
         'patterns': [
           {
             'include': '#code'
@@ -445,12 +445,12 @@
       {
         'captures':
           '0':
-            'name': 'punctuation.definition.comment.java'
+            'name': 'punctuation.definition.comment.apex'
         'match': '/\\*\\*/'
-        'name': 'comment.block.empty.java'
+        'name': 'comment.block.empty.apex'
       }
       {
-        'include': 'text.html.javadoc'
+        'include': 'text.html.apexdoc'
       }
       {
         'include': '#comments-inline'
@@ -462,24 +462,24 @@
         'begin': '/\\*'
         'captures':
           '0':
-            'name': 'punctuation.definition.comment.java'
+            'name': 'punctuation.definition.comment.apex'
         'end': '\\*/'
-        'name': 'comment.block.java'
+        'name': 'comment.block.apex'
       }
       {
         'begin': '(^[ \\t]+)?(?=//)'
         'beginCaptures':
           '1':
-            'name': 'punctuation.whitespace.comment.leading.java'
+            'name': 'punctuation.whitespace.comment.leading.apex'
         'end': '(?!\\G)'
         'patterns': [
           {
             'begin': '//'
             'beginCaptures':
               '0':
-                'name': 'punctuation.definition.comment.java'
+                'name': 'punctuation.definition.comment.apex'
             'end': '\\n'
-            'name': 'comment.line.double-slash.java'
+            'name': 'comment.line.double-slash.apex'
           }
         ]
       }
@@ -488,22 +488,22 @@
     'patterns': [
       {
         'match': '\\b(true|false|null|select|from|where|limit|order by|like|in|not in|includes|excludes)\\b'
-        'name': 'constant.language.java'
+        'name': 'constant.language.apex'
       }
       {
         'match': '\\b(this|super)\\b'
-        'name': 'variable.language.java'
+        'name': 'variable.language.apex'
       }
       {
         'match': '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)([LlFfUuDd]|UL|ul)?\\b'
-        'name': 'constant.numeric.java'
+        'name': 'constant.numeric.apex'
       }
       {
         'captures':
           '1':
-            'name': 'keyword.operator.dereference.java'
+            'name': 'keyword.operator.dereference.apex'
         'match': '(\\.)?\\b([A-Z][A-Z0-9_]+)(?!<|\\.class|\\s*\\w+\\s*=)\\b'
-        'name': 'constant.other.java'
+        'name': 'constant.other.apex'
       }
     ]
   'enums':
@@ -514,9 +514,9 @@
         'begin': '\\w+'
         'beginCaptures':
           '0':
-            'name': 'constant.other.enum.java'
+            'name': 'constant.other.enum.apex'
         'end': '(?=,|;|})'
-        'name': 'meta.enum.java'
+        'name': 'meta.enum.apex'
         'patterns': [
           {
             'include': '#parens'
@@ -525,11 +525,11 @@
             'begin': '{'
             'beginCaptures':
               '0':
-                'name': 'punctuation.section.enum.begin.java'
+                'name': 'punctuation.section.enum.begin.apex'
             'end': '}'
             'endCaptures':
               '0':
-                'name': 'punctuation.section.enum.end.java'
+                'name': 'punctuation.section.enum.end.apex'
             'patterns': [
               {
                 'include': '#class-body'
@@ -543,63 +543,63 @@
     'patterns': [
       {
         'match': '\\b(try|catch|finally|throw)\\b'
-        'name': 'keyword.control.catch-exception.java'
+        'name': 'keyword.control.catch-exception.apex'
       }
       {
         'match': '\\?|:'
-        'name': 'keyword.control.ternary.java'
+        'name': 'keyword.control.ternary.apex'
       }
       {
         'match': '\\b(return|break|case|continue|default|do|while|for|switch|if|else)\\b'
-        'name': 'keyword.control.java'
+        'name': 'keyword.control.apex'
       }
       {
         'match': '\\b(instanceof)\\b'
-        'name': 'keyword.operator.java'
+        'name': 'keyword.operator.apex'
       }
       {
         'match': '(<<|>>>?|~|\\^)'
-        'name': 'keyword.operator.bitwise.java'
+        'name': 'keyword.operator.bitwise.apex'
       }
       {
         'match': '((&|\\^|\\||<<|>>>?)=)'
-        'name': 'keyword.operator.assignment.bitwise.java'
+        'name': 'keyword.operator.assignment.bitwise.apex'
       }
       {
         'match': '(===?|!=|<=|>=|<>|<|>)'
-        'name': 'keyword.operator.comparison.java'
+        'name': 'keyword.operator.comparison.apex'
       }
       {
         'match': '([+*/%-]=)'
-        'name': 'keyword.operator.assignment.arithmetic.java'
+        'name': 'keyword.operator.assignment.arithmetic.apex'
       }
       {
         'match': '(=)'
-        'name': 'keyword.operator.assignment.java'
+        'name': 'keyword.operator.assignment.apex'
       }
       {
         'match': '(\\-\\-|\\+\\+)'
-        'name': 'keyword.operator.increment-decrement.java'
+        'name': 'keyword.operator.increment-decrement.apex'
       }
       {
         'match': '(\\-|\\+|\\*|\\/|%)'
-        'name': 'keyword.operator.arithmetic.java'
+        'name': 'keyword.operator.arithmetic.apex'
       }
       {
         'match': '(!|&&|\\|\\|)'
-        'name': 'keyword.operator.logical.java'
+        'name': 'keyword.operator.logical.apex'
       }
       {
         'match': '(\\||&)'
-        'name': 'keyword.operator.bitwise.java'
+        'name': 'keyword.operator.bitwise.apex'
       }
       {
         'match': '(?<=\\S)\\.(?=\\S)'
-        'name': 'keyword.operator.dereference.java'
+        'name': 'keyword.operator.dereference.apex'
       }
       {
         'match': ';'
-        'name': 'punctuation.terminator.java'
+        'name': 'punctuation.terminator.apex'
       }
       {
         'match': '\\b(?i:insert|update|delete|upsert)\\b'
@@ -610,18 +610,18 @@
     'begin': '([\\w$]+)(\\()'
     'beginCaptures':
       '1':
-        'name': 'meta.method.java'
+        'name': 'meta.method.apex'
       '2':
-        'name': 'punctuation.definition.method-parameters.begin.java'
+        'name': 'punctuation.definition.method-parameters.begin.apex'
     'end': '\\)'
     'endCaptures':
       '0':
-        'name': 'punctuation.definition.method-parameters.end.java'
-    'name': 'meta.method-call.java'
+        'name': 'punctuation.definition.method-parameters.end.apex'
+    'name': 'meta.method-call.apex'
     'patterns': [
       {
         'match': ','
-        'name': 'punctuation.definition.seperator.parameter.java'
+        'name': 'punctuation.definition.seperator.parameter.apex'
       }
       {
         'include': '#code'
@@ -632,8 +632,8 @@
     'end': '(})|(?=;)'
     'endCaptures':
       '1':
-        'name': 'punctuation.section.method.end.java'
-    'name': 'meta.method.java'
+        'name': 'punctuation.section.method.end.apex'
+    'name': 'meta.method.apex'
     'patterns': [
       {
         'include': '#storage-modifiers'
@@ -642,9 +642,9 @@
         'begin': '(\\w+)\\s*\\('
         'beginCaptures':
           '1':
-            'name': 'entity.name.function.java'
+            'name': 'entity.name.function.apex'
         'end': '\\)'
-        'name': 'meta.method.identifier.java'
+        'name': 'meta.method.identifier.apex'
         'patterns': [
           {
             'include': '#parameters'
@@ -654,7 +654,7 @@
       {
         'begin': '<'
         'end': '>'
-        'name': 'storage.type.token.java'
+        'name': 'storage.type.token.apex'
         'patterns': [
           {
             'include': '#object-types'
@@ -663,14 +663,14 @@
             'begin': '<'
             'comment': 'This is just to support <>\'s with no actual type prefix'
             'end': '>|[^\\w\\s,\\[\\]<]'
-            'name': 'storage.type.generic.java'
+            'name': 'storage.type.generic.apex'
           }
         ]
       }
       {
         'begin': '(?=\\w.*\\s+\\w+\\s*\\()'
         'end': '(?=\\w+\\s*\\()'
-        'name': 'meta.method.return-type.java'
+        'name': 'meta.method.return-type.apex'
         'patterns': [
           {
             'include': '#all-types'
@@ -684,9 +684,9 @@
         'begin': '{'
         'beginCaptures':
           '0':
-            'name': 'punctuation.section.method.begin.java'
+            'name': 'punctuation.section.method.begin.apex'
         'end': '(?=})'
-        'name': 'meta.method.body.java'
+        'name': 'meta.method.body.apex'
         'patterns': [
           {
             'include': '#code'
@@ -702,7 +702,7 @@
       {
         'begin': '\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)<'
         'end': '>|[^\\w\\s,\\?<\\[\\]]'
-        'name': 'storage.type.generic.java'
+        'name': 'storage.type.generic.apex'
         'patterns': [
           {
             'include': '#object-types'
@@ -711,14 +711,14 @@
             'begin': '<'
             'comment': 'This is just to support <>\'s with no actual type prefix'
             'end': '>|[^\\w\\s,\\[\\]<]'
-            'name': 'storage.type.generic.java'
+            'name': 'storage.type.generic.apex'
           }
         ]
       }
       {
         'begin': '\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)(?=\\[)'
         'end': '(?=[^\\]\\s])'
-        'name': 'storage.type.object.array.java'
+        'name': 'storage.type.object.array.apex'
         'patterns': [
           {
             'begin': '\\['
@@ -734,9 +734,9 @@
       {
         'captures':
           '1':
-            'name': 'keyword.operator.dereference.java'
+            'name': 'keyword.operator.dereference.apex'
         'match': '\\b(?:[a-z]\\w*(\\.))*[A-Z]+\\w*\\b'
-        'name': 'storage.type.java'
+        'name': 'storage.type.apex'
       }
     ]
   'object-types-inherited':
@@ -744,7 +744,7 @@
       {
         'begin': '\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)<'
         'end': '>|[^\\w\\s,<]'
-        'name': 'entity.other.inherited-class.java'
+        'name': 'entity.other.inherited-class.apex'
         'patterns': [
           {
             'include': '#object-types'
@@ -753,23 +753,23 @@
             'begin': '<'
             'comment': 'This is just to support <>\'s with no actual type prefix'
             'end': '>|[^\\w\\s,<]'
-            'name': 'storage.type.generic.java'
+            'name': 'storage.type.generic.apex'
           }
         ]
       }
       {
         'captures':
           '1':
-            'name': 'keyword.operator.dereference.java'
+            'name': 'keyword.operator.dereference.apex'
         'match': '\\b(?:[a-z]\\w*(\\.))*[A-Z]+\\w*'
-        'name': 'entity.other.inherited-class.java'
+        'name': 'entity.other.inherited-class.apex'
       }
     ]
   'parameters':
     'patterns': [
       {
         'match': 'final'
-        'name': 'storage.modifier.java'
+        'name': 'storage.modifier.apex'
       }
       {
         'include': '#annotations'
@@ -785,7 +785,7 @@
       }
       {
         'match': '\\w+'
-        'name': 'variable.parameter.java'
+        'name': 'variable.parameter.apex'
       }
     ]
   'parens':
@@ -813,7 +813,7 @@
   'storage-modifiers':
     'captures':
       '1':
-        'name': 'storage.modifier.java'
+        'name': 'storage.modifier.apex'
     'match': '\\b(public|private|protected|static|final|native|synchronized|abstract|threadsafe|transient)\\b'
   'strings':
     'patterns': [
@@ -821,16 +821,16 @@
         'begin': '"'
         'beginCaptures':
           '0':
-            'name': 'punctuation.definition.string.begin.java'
+            'name': 'punctuation.definition.string.begin.apex'
         'end': '"'
         'endCaptures':
           '0':
-            'name': 'punctuation.definition.string.end.java'
-        'name': 'string.quoted.double.java'
+            'name': 'punctuation.definition.string.end.apex'
+        'name': 'string.quoted.double.apex'
         'patterns': [
           {
             'match': '\\\\.'
-            'name': 'constant.character.escape.java'
+            'name': 'constant.character.escape.apex'
           }
         ]
       }
@@ -838,16 +838,16 @@
         'begin': '\''
         'beginCaptures':
           '0':
-            'name': 'punctuation.definition.string.begin.java'
+            'name': 'punctuation.definition.string.begin.apex'
         'end': '\''
         'endCaptures':
           '0':
-            'name': 'punctuation.definition.string.end.java'
-        'name': 'string.quoted.single.java'
+            'name': 'punctuation.definition.string.end.apex'
+        'name': 'string.quoted.single.apex'
         'patterns': [
           {
             'match': '\\\\.'
-            'name': 'constant.character.escape.java'
+            'name': 'constant.character.escape.apex'
           }
         ]
       }
@@ -856,9 +856,9 @@
     'begin': 'throws'
     'beginCaptures':
       '0':
-        'name': 'storage.modifier.java'
+        'name': 'storage.modifier.apex'
     'end': '(?={|;)'
-    'name': 'meta.throwables.java'
+    'name': 'meta.throwables.apex'
     'patterns': [
       {
         'include': '#object-types'
@@ -882,7 +882,7 @@
       {
         'begin': '(?x:(?=\n                        (?:\n                            (?:private|protected|public|native|synchronized|abstract|threadsafe|transient|static|final) # visibility/modifier\n                                |\n                            (?:def)\n                                |\n                            (?:void|boolean|byte|char|short|int|float|long|double)\n                                |\n                            (?:(?:[a-z]\\w*\\.)*[A-Z]+\\w*) # object type\n                        )\n                        \\s+\n                        (?!private|protected|public|native|synchronized|abstract|threadsafe|transient|static|final|def|void|boolean|byte|char|short|int|float|long|double)\n                        [\\w\\d_<>\\[\\],\\?][\\w\\d_<>\\[\\],\\? \\t]*\n                        (?:=|$)\n                        \n\t\t\t\t\t))'
         'end': '(?=;)'
-        'name': 'meta.definition.variable.java'
+        'name': 'meta.definition.variable.apex'
         'patterns': [
           {
             'match': '\\s'
@@ -890,20 +890,20 @@
           {
             'captures':
               '1':
-                'name': 'constant.variable.java'
+                'name': 'constant.variable.apex'
             'match': '([A-Z_0-9]+)\\s+(?=\\=)'
           }
           {
             'captures':
               '1':
-                'name': 'meta.definition.variable.name.java'
+                'name': 'meta.definition.variable.name.apex'
             'match': '(\\w[^\\s,]*)\\s+(?=\\=)'
           }
           {
             'begin': '='
             'beginCaptures':
               '0':
-                'name': 'keyword.operator.assignment.java'
+                'name': 'keyword.operator.assignment.apex'
             'end': '(?=;)'
             'patterns': [
               {
@@ -914,7 +914,7 @@
           {
             'captures':
               '1':
-                'name': 'meta.definition.variable.name.java'
+                'name': 'meta.definition.variable.name.apex'
             'match': '(\\w[^\\s=]*)(?=\\s*;)'
           }
           {
