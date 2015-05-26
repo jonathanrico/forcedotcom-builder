@@ -5,7 +5,7 @@ qs = require 'querystring'
 BuildView = require './build-view'
 
 module.exports =
-  configDefaults:
+  config:
     environment: "",
     arguments: ""
 
