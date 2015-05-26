@@ -1,18 +1,14 @@
-'context-menu':
-  '.overlayer':
-      'Enable build': 'build:sf-deploy'
-
-'menu': [
-  {
-    'label': 'Packages'
-    'submenu': [
-      'label': 'Force.com'
-      'submenu': [
-        { 'label': 'Build Current Project', 'command': 'build:sf-deploy' },
-        { 'label': 'Build Static Resources', 'command': 'build:sf-deploy-staticres'},
-        { 'label': 'Build Apex', 'command': 'build:sf-deploy-apex' },
-        { 'label': 'Build Visualforce', 'command': 'build:sf-deploy-visualforce'}
-      ]
-    ]
-  }
+'menu':[
+    {
+        'label': 'Packages'
+        'submenu': [
+          'label': 'Force.com'
+          'submenu': [
+            { 'label': 'Build Current Project', 'command': 'build:sf-deploy' },
+            { 'label': 'Build Static Resources', 'command': 'build:sf-deploy-staticres'},
+            { 'label': 'Build Apex', 'command': 'build:sf-deploy-apex' },
+            { 'label': 'Build Visualforce', 'command': 'build:sf-deploy-visualforce'}
+          ]
+        ]
+    }
 ]

@@ -1,25 +1,27 @@
 {
-  "name": "forcedotcom-builder",
-  "main": "./lib/build",
-  "version": "0.1.0",
-  "private":true,
-  "description": "Build your Force.com projects, straight from Atom",
-  "activationEvents": [
-    "build:sf-deploy-file",
-    "build:sf-deploy",
-    "build:sf-deploy-static-res",
-    "build:sf-deploy-apex",
-    "build:sf-deploy-visualforce",
-    "build:sf-abort",
-    "build:sf-retrieve-unpackaged",
-    "build:sf-retrieve-unpackaged-file"
-  ],
-  "repository": "https://github.com/jonathanrico/forcedotcom-builder",
-  "license": "MIT",
-  "engines": {
-    "atom": ">=0.50.0"
-  },
-  "dependencies": {
-    "atom-message-panel": ">=1.0.0"
-  }
+    "name": "forcedotcom-builder",
+    "main": "./lib/build",
+    "version": "0.1.0",
+    "private":true,
+    "description": "Build your Force.com projects, straight from Atom",
+    "activationCommands": {
+        "atom-workspace": [
+            "build:sf-deploy-file",
+            "build:sf-deploy",
+            "build:sf-deploy-static-res",
+            "build:sf-deploy-apex",
+            "build:sf-deploy-visualforce",
+            "build:sf-abort",
+            "build:sf-retrieve-unpackaged",
+            "build:sf-retrieve-unpackaged-file"
+         ]
+    },
+    "repository": "https://github.com/jonathanrico/forcedotcom-builder",
+    "license": "MIT",
+    "engines": {
+        "atom": ">=0.50.0"
+    },
+    "dependencies": {
+        "atom-message-panel": ">=1.0.0"
+    }
 }

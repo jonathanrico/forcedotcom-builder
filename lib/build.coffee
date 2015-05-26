@@ -10,7 +10,11 @@ module.exports =
     arguments: ""
 
   activate: (state) ->
-    @root = atom.project.getPath()
+    project_paths = atom.project.getPaths()
+    if !project_paths
+        return
+
+    @root = project_paths[0]
     @buildView = new BuildView()
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
@@ -59,7 +63,6 @@ module.exports =
     @child.stdout.on 'data', @buildView.append
     @child.stderr.on 'data', @buildView.append
     @child.on 'close', (exitCode) =>
-      console.log('exitCode is : '+exitCode)
       @buildView.buildFinished(0 == exitCode)
       @child = null
 
@@ -101,20 +104,19 @@ module.exports =
   processSingleFile: (optype) ->
     if(@isDeployRunning())
       clearTimeout @finishedTimer
-      if(atom.workspace.getActiveEditor().buffer?.file?)
+      if(atom.workspace.getActiveTextEditor().buffer?.file?)
 
-        path = atom.workspace.getActiveEditor().buffer.file.path
+        path = atom.workspace.getActiveTextEditor().buffer.file.path
         projectPath = @root+'/src/'
         pathHeRegex = ///#{projectPath}///
         if(path.match(pathHeRegex))
-          fileBaseName = atom.workspace.getActiveEditor().buffer.file.getBaseName()
+          fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
           folderName = folderNamePath.split "/"
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
             fileNameParsed = if fileName.length > 2 then fileName[0]+'.'+fileName[1] else fileName[0]
-          console.log(fileNameParsed)
           metaDataType = null
           switch folderName[0]
             when 'classes'
@@ -196,7 +198,7 @@ module.exports =
 
   isDeployRunning: ->
     if @child
-      alert "Hmmm! There's another deploy running."
+      alert "Hmmm! There's another deployment running."
       return false
     else
       return true
