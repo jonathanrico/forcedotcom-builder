@@ -16,6 +16,7 @@ module.exports =
 
     @root = project_paths[0]
     @buildView = new BuildView()
+    @notifications = new atom.NotificationManager
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
     atom.commands.add 'atom-workspace', 'build:sf-deploy', => @deploy()
@@ -198,7 +199,7 @@ module.exports =
 
   isDeployRunning: ->
     if @child
-      atom.NotificationManager.addError("Hmm... a deployment process is already running.", dismissable: true)
+      @notifications.addError("Hmm... a deployment process is already running.", dismissable: true)
       return false
     else
       return true
