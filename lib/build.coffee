@@ -117,7 +117,7 @@ module.exports =
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
           isWin = /^win/.test(process.platform)
-          folderName =  if isWin then folderNamePath.split("\\/") else folderNamePath.split "/"
+          folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
             fileNameParsed = if fileName.length > 2 then fileName[0]+'.'+fileName[1] else fileName[0]
