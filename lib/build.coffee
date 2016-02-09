@@ -14,6 +14,8 @@ module.exports =
     if !project_paths
         return
 
+    console.log(project_paths)
+    
     @root = project_paths[0]
     @buildView = new BuildView()
 
