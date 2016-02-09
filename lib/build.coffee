@@ -15,7 +15,7 @@ module.exports =
         return
 
     console.log(project_paths)
-    
+
     @root = project_paths[0]
     @buildView = new BuildView()
 
@@ -109,6 +109,7 @@ module.exports =
       if(atom.workspace.getActiveTextEditor().buffer?.file?)
 
         path = atom.workspace.getActiveTextEditor().buffer.file.path
+        path = path.replace(/\\/g,"/")
         projectPath = @root+'/src/'
         pathHeRegex = ///#{projectPath}///
         if(path.match(pathHeRegex))
