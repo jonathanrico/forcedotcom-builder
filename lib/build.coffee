@@ -188,8 +188,6 @@ module.exports =
 
         else
           @buildView.buildUnsupported()
-    else
-      return true
 
   stop: ->
     if @child
@@ -200,7 +198,6 @@ module.exports =
 
   isDeployRunning: ->
     if @child
-      alert "Hmmm! There's another deployment running."
       return false
     else
       return true
