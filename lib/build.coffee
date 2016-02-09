@@ -107,16 +107,14 @@ module.exports =
     if(@isDeployRunning())
       clearTimeout @finishedTimer
       if(atom.workspace.getActiveTextEditor().buffer?.file?)
-
+        isWin = /^win/.test(process.platform)
         path = atom.workspace.getActiveTextEditor().buffer.file.path
-
-        projectPath = @root+'/src/'
+        projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
         pathHeRegex = ///#{projectPath}///
         if(path.match(pathHeRegex))
           fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
-          isWin = /^win/.test(process.platform)
           folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
