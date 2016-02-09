@@ -198,6 +198,7 @@ module.exports =
 
   isDeployRunning: ->
     if @child
+      atom.NotificationManager.addError("Hmm... a deployment process is already running.", dismissable: true)
       return false
     else
       return true
