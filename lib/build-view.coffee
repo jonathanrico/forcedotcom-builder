@@ -25,14 +25,20 @@ class BuildView
     @messagepanel.setTitle('Building...',true)
 
   buildFinished: (success) =>
-    text = if success then 'Build successful!' else ':( Build failed'
+    text = if success then 'Build successful! :)' else 'Build failed :('
     textclass = if success then 'text-success' else 'text-error'
+    if success
+        atom.notifications.addSuccess("Build successful! :)", dismissable: true)
+    else
+        atom.notifications.addError("Build failed :(", dismissable: true)
+
     @addMessage(text,textclass)
     @messagepanel.setTitle(text,true)
     clearTimeout @titleTimer if @titleTimer
 
   buildAborted: =>
     @addMessage('Aborted','text-error')
+    atom.notifications.addWarning("Build aborted", dismissable: true)
     clearTimeout @titleTimer if @titleTimer
     @abortTimer = setTimeout @reset, 1000
 
