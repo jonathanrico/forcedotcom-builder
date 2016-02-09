@@ -189,7 +189,7 @@ module.exports =
         else
           @buildView.buildUnsupported()
     else
-      return false
+      return true
 
   stop: ->
     if @child
