@@ -109,14 +109,15 @@ module.exports =
       if(atom.workspace.getActiveTextEditor().buffer?.file?)
 
         path = atom.workspace.getActiveTextEditor().buffer.file.path
-        path = path.replace(/\\/g,"/")
+
         projectPath = @root+'/src/'
         pathHeRegex = ///#{projectPath}///
         if(path.match(pathHeRegex))
           fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
-          folderName = folderNamePath.split "/"
+          var isWin = /^win/.test(process.platform)
+          folderName =  if !isWin ? folderNamePath.split "/" : folderNamePath.split("\\/")
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
             fileNameParsed = if fileName.length > 2 then fileName[0]+'.'+fileName[1] else fileName[0]
