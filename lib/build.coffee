@@ -109,9 +109,8 @@ module.exports =
       if(atom.workspace.getActiveTextEditor().buffer?.file?)
         isWin = /^win/.test(process.platform)
         path = atom.workspace.getActiveTextEditor().buffer.file.path
-        projectPath = if isWin then @root+'\\src\\' else @root+'/src'
+        projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
         console.log('projectPath : '+projectPath)
-        pathHeRegex = ///#{projectPath}///
         console.log('path : '+path)
         console.log('projectPath : '+projectPath)
         console.log('path.startsWith(projectPath) = '+path.startsWith(projectPath))
