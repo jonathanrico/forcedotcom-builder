@@ -109,7 +109,7 @@ module.exports =
       if(atom.workspace.getActiveTextEditor().buffer?.file?)
         isWin = /^win/.test(process.platform)
         path = atom.workspace.getActiveTextEditor().buffer.file.path
-        projectPath = if isWin then @root+'\\src' else @root+'/src'
+        projectPath = if isWin then @root+'\\src\\' else @root+'/src'
         console.log('projectPath : '+projectPath)
         pathHeRegex = ///#{projectPath}///
         console.log('path : '+path)
@@ -118,8 +118,7 @@ module.exports =
         if(path.startsWith(projectPath))
           fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
           folderNamePath = path.replace ///#{fileBaseName}///, ''
-          folderNamePath = folderNamePath.replace pathHeRegex, ''
-          folderNamePath = folderNamePath.substring(1)
+          folderNamePath = folderNamePath.replace(projectPath, '')
           console.log('folderNamePath '+folderNamePath)
           folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
           fileName = fileBaseName.split "."
