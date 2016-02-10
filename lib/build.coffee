@@ -114,10 +114,12 @@ module.exports =
         pathHeRegex = ///#{projectPath}///
         console.log('path :'+path)
         console.log('pathHeRegex : '+pathHeRegex)
+        console.log('path.match(pathHeRegex) = '+path.match(pathHeRegex))
         if(path.match(pathHeRegex))
           fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
+          console.log('folderNamePath '+folderNamePaths)
           folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
