@@ -1,3 +1,3 @@
 'atom-workspace':
-  'alt-cmd-b': 'build:sf-deploy-file'
-  'alt-cmd-r': 'build:sf-retrieve-unpackaged-file'
+  'ctrl-alt-b': 'build:sf-deploy-file'
+  'ctrl-alt-r': 'build:sf-retrieve-unpackaged-file'
