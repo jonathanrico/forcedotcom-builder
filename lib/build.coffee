@@ -120,7 +120,7 @@ module.exports =
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace pathHeRegex, ''
           folderNamePath = folderNamePath.substring(1)
-          console.log('folderNamePath '+folderNamePaths)
+          console.log('folderNamePath '+folderNamePath)
           folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
           fileName = fileBaseName.split "."
           if(fileName.length > 1)
