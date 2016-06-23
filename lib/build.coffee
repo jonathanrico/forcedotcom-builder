@@ -1,6 +1,7 @@
 child_process = require 'child_process'
 fs = require 'fs'
 qs = require 'querystring'
+pathModule = require 'path'
 
 BuildView = require './build-view'
 
@@ -18,12 +19,14 @@ module.exports =
     @buildView = new BuildView()
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @deploySingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-deploy', => @deploy()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @deployStaticRes()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @deployApex()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @deployVisualforce()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @retrieveUnpackaged()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @retrieveSingleFile()
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
 
   deactivate: ->
@@ -96,20 +99,30 @@ module.exports =
     if @child then @abort(=> @startNewBuild('retrieve-unpackaged')) else @startNewBuild('retrieve-unpackaged')
 
   deploySingleFile: ->
-    @processSingleFile('deploy')
+    @processSingleFile('deploy','editor')
 
   retrieveSingleFile: ->
-    @processSingleFile('retrieve')
+    @processSingleFile('retrieve','editor')
 
-  processSingleFile: (optype) ->
+  deploySingleFileTreeView: ->
+    @processSingleFile('deploy','treeview')
+
+  retrieveSingleFileTreeView: ->
+    @processSingleFile('retrieve','treeview')
+
+  processSingleFile: (optype, cmdtype) ->
     if(@isDeployRunning())
       clearTimeout @finishedTimer
-      if(atom.workspace.getActiveTextEditor().buffer?.file?)
-        isWin = /^win/.test(process.platform)
+      path = null
+      if(cmdtype == 'editor' && atom.workspace.getActiveTextEditor()?.buffer?.file?)
         path = atom.workspace.getActiveTextEditor().buffer.file.path
+      else if(cmdtype == 'treeview' && atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?)
+        path = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()[0]
+      if(path)
+        isWin = /^win/.test(process.platform)
         projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
         if(path.startsWith(projectPath))
-          fileBaseName = atom.workspace.getActiveTextEditor().buffer.file.getBaseName()
+          fileBaseName = pathModule.basename(path)
           folderNamePath = path.replace ///#{fileBaseName}///, ''
           folderNamePath = folderNamePath.replace(projectPath, '')
           folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
