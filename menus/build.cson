@@ -12,3 +12,9 @@
         ]
     }
 ]
+'context-menu':
+    '.tree-view.full-menu [is="tree-view-file"]': [
+        { 'label': 'Force.com : Build File', 'command': 'build:sf-deploy-file-treeview' },
+        { 'label': 'Force.com : Retrieve File', 'command': 'build:sf-retrieve-unpackaged-file-treeview' },
+        {'type': 'separator'}
+    ]
