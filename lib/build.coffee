@@ -246,7 +246,8 @@ module.exports =
                   else
                       if fileParams.fileNameParsed not in params[fileParams.metaDataType].items && fileParams.fileNameParsed.length > 0
                           params[fileParams.metaDataType].items.push(fileParams.fileNameParsed)
-          params = JSON.stringify(params);
+          params = JSON.stringify(params).replace(/"/g, '\\"');;
+          params =
           if @child then @abort(=> @startNewBuild(optype, params, 'buildSeveral')) else @startNewBuild(optype, params, 'buildSeveral')
 
   stop: ->
