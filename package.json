@@ -12,10 +12,12 @@
       "build:sf-deploy-static-res",
       "build:sf-deploy-apex",
       "build:sf-deploy-visualforce",
+      "build:sf-deploy-several-files",
       "build:sf-abort",
       "build:sf-retrieve-unpackaged",
       "build:sf-retrieve-unpackaged-file",
-      "build:sf-retrieve-unpackaged-file-treeview"
+      "build:sf-retrieve-unpackaged-file-treeview",
+      "build:sf-retrieve-several-files"
     ]
   },
   "repository": "https://github.com/jonathanrico/forcedotcom-builder",

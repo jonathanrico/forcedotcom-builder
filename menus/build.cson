@@ -18,3 +18,8 @@
         { 'label': 'Force.com : Retrieve File', 'command': 'build:sf-retrieve-unpackaged-file-treeview' },
         {'type': 'separator'}
     ]
+    '.tree-view.multi-select': [
+        { 'label': 'Force.com : Build Files', 'command': 'build:sf-deploy-several-files' },
+        { 'label': 'Force.com : Retrieve Files', 'command': 'build:sf-retrieve-several-files' },
+        {'type': 'separator'}
+    ]

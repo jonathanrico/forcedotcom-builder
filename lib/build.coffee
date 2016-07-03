@@ -24,10 +24,12 @@ module.exports =
     atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @deployStaticRes()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @deployApex()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @deployVisualforce()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-several-files', => @deploySeveralFiles()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @retrieveUnpackaged()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @retrieveSingleFile()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @retrieveSeveralFiles()
 
   deactivate: ->
     @child.kill('SIGKILL')
@@ -45,12 +47,25 @@ module.exports =
     cmd += @root + '/build/build.xml'
     return cmd
 
-  startNewBuild:(buildTarget,params) ->
-    if(params)
-      cmd = @buildSingleFileCommand(buildTarget,params)
-    else
-      cmd = @buildCommand(buildTarget)
-    return if !cmd
+  buildSeveralFilesCommand:(optype, jsonParam) ->
+    optype = if (optype == 'deploy') then 'deploy' else 'retrieve'
+    cmd = 'ant ' + optype + '-several-files'
+    if jsonParam
+        cmd += ' -D' + optype + '.several.json="' + jsonParam + '"'
+    cmd += ' -f ' + @root + '/build/build.xml'
+    atom.notifications.addError(cmd, dismissable: true)
+    return cmd
+
+  startNewBuild:(buildTarget, params, buildType) ->
+    switch buildType
+        when 'build'
+            cmd = @buildCommand(buildTarget)
+        when 'buildSingle'
+            cmd = @buildSingleFileCommand(buildTarget, params)
+        when 'buildSeveral'
+            cmd = @buildSeveralFilesCommand(buildTarget, params)
+        else
+            return if !cmd
 
     args = {
       encoding: 'utf8',
@@ -80,23 +95,23 @@ module.exports =
 
   deploy: ->
     clearTimeout @finishedTimer
-    if @child then @abort(=> @startNewBuild('deploy')) else @startNewBuild('deploy')
+    if @child then @abort(=> @startNewBuild('deploy', null, 'build')) else @startNewBuild('deploy', null, 'build')
 
   deployStaticRes: ->
     clearTimeout @finishedTimer
-    if @child then @abort(=> @startNewBuild('deploy-static-res')) else @startNewBuild('deploy-static-res')
+    if @child then @abort(=> @startNewBuild('deploy-static-res', null, 'build')) else @startNewBuild('deploy-static-res', null, 'build')
 
   deployApex: ->
     clearTimeout @finishedTimer
-    if @child then @abort(=> @startNewBuild('deploy-apex')) else @startNewBuild('deploy-apex')
+    if @child then @abort(=> @startNewBuild('deploy-apex', null, 'build')) else @startNewBuild('deploy-apex', null, 'build')
 
   deployVisualforce: ->
     clearTimeout @finishedTimer
-    if @child then @abort(=> @startNewBuild('deploy-visualforce')) else @startNewBuild('deploy-visualforce')
+    if @child then @abort(=> @startNewBuild('deploy-visualforce', null, 'build')) else @startNewBuild('deploy-visualforce', null, 'build')
 
   retrieveUnpackaged: ->
     clearTimeout @finishedTimer
-    if @child then @abort(=> @startNewBuild('retrieve-unpackaged')) else @startNewBuild('retrieve-unpackaged')
+    if @child then @abort(=> @startNewBuild('retrieve-unpackaged', null, 'build')) else @startNewBuild('retrieve-unpackaged', null, 'build')
 
   deploySingleFile: ->
     @processSingleFile('deploy','editor')
@@ -110,6 +125,79 @@ module.exports =
   retrieveSingleFileTreeView: ->
     @processSingleFile('retrieve','treeview')
 
+  getFileDetails: (isWin, projectPath, path) ->
+    params = null
+    if(path.startsWith(projectPath))
+      params = {}
+      params.fileBaseName = pathModule.basename(path)
+      params.folderNamePath = path.replace ///#{params.fileBaseName}///, ''
+      params.folderNamePath = params.folderNamePath.replace(projectPath, '')
+      params.folderName =  if isWin then params.folderNamePath.split("\\") else params.folderNamePath.split "/"
+      params.fileName = params.fileBaseName.split "."
+      if(params.fileName.length > 1)
+        params.fileNameParsed = if (params.fileName.length > 2 && (!/^.+\-meta$/.test(params.fileName[1]))) then params.fileName[0]+'.'+params.fileName[1] else params.fileName[0]
+      params.metaDataType = null
+      switch params.folderName[0]
+        when 'classes'
+          params.metaDataType = 'ApexClass'
+        when 'triggers'
+          params.metaDataType = 'ApexTrigger'
+        when 'pages'
+          params.metaDataType = 'ApexPage'
+        when 'components'
+          params.metaDataType = 'ApexComponent'
+        when 'staticresources'
+          params.metaDataType = 'StaticResource'
+        when 'applications'
+          params.metaDataType = 'CustomApplication'
+        when 'objects'
+          params.metaDataType = 'CustomObject'
+        when 'tabs'
+          params.metaDataType = 'CustomTab'
+        when 'layouts'
+          params.metaDataType = 'Layout'
+        when 'quickActions'
+          params.metaDataType = 'QuickAction'
+        when 'profiles'
+          params.metaDataType = 'Profile'
+        when 'labels'
+          params.metaDataType = 'CustomLabels'
+        when 'workflows'
+          params.metaDataType = 'Workflow'
+        when 'remoteSiteSettings'
+          params.metaDataType = 'RemoteSiteSetting'
+        when 'permissionsets'
+          params.metaDataType = 'PermissionSet'
+        when 'letterhead'
+          params.metaDataType = 'Letterhead'
+        when 'translations'
+          params.metaDataType = 'Translations'
+        when 'groups'
+          params.metaDataType = 'Group'
+        when 'objectTranslations'
+          params.metaDataType = 'CustomObjectTranslation'
+        when 'communities'
+          params.metaDataType = 'Network'
+        when 'reportTypes'
+          params.metaDataType = 'ReportType'
+        when 'settings'
+          params.metaDataType = 'Settings'
+        when 'assignmentRules'
+          params.metaDataType = 'AssignmentRule'
+        when 'approvalProcesses'
+          params.metaDataType = 'ApprovalProcess'
+        when 'escalationRules'
+          params.metaDataType = 'EscalationRule'
+        when 'flows'
+          params.metaDataType = 'Flow'
+        when 'aura'
+          params.metaDataType = 'AuraDefinitionBundle'
+        when 'documents'
+          params.metaDataType = 'Document'
+        else
+          params.metaDataType = null
+    return params
+
   processSingleFile: (optype, cmdtype) ->
     if(@isDeployRunning())
       clearTimeout @finishedTimer
@@ -121,85 +209,45 @@ module.exports =
       if(path)
         isWin = /^win/.test(process.platform)
         projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
-        if(path.startsWith(projectPath))
-          fileBaseName = pathModule.basename(path)
-          folderNamePath = path.replace ///#{fileBaseName}///, ''
-          folderNamePath = folderNamePath.replace(projectPath, '')
-          folderName =  if isWin then folderNamePath.split("\\") else folderNamePath.split "/"
-          fileName = fileBaseName.split "."
-          if(fileName.length > 1)
-            fileNameParsed = if fileName.length > 2 then fileName[0]+'.'+fileName[1] else fileName[0]
-          metaDataType = null
-          switch folderName[0]
-            when 'classes'
-              metaDataType = 'ApexClass'
-            when 'triggers'
-              metaDataType = 'ApexTrigger'
-            when 'pages'
-              metaDataType = 'ApexPage'
-            when 'components'
-              metaDataType = 'ApexComponent'
-            when 'staticresources'
-              metaDataType = 'StaticResource'
-            when 'applications'
-              metaDataType = 'CustomApplication'
-            when 'objects'
-              metaDataType = 'CustomObject'
-            when 'tabs'
-              metaDataType = 'CustomTab'
-            when 'layouts'
-              metaDataType = 'Layout'
-            when 'quickActions'
-              metaDataType = 'QuickAction'
-            when 'profiles'
-              metaDataType = 'Profile'
-            when 'labels'
-              metaDataType = 'CustomLabels'
-            when 'workflows'
-              metaDataType = 'Workflow'
-            when 'remoteSiteSettings'
-              metaDataType = 'RemoteSiteSetting'
-            when 'permissionsets'
-              metaDataType = 'PermissionSet'
-            when 'letterhead'
-              metaDataType = 'Letterhead'
-            when 'translations'
-              metaDataType = 'Translations'
-            when 'groups'
-              metaDataType = 'Group'
-            when 'objectTranslations'
-              metaDataType = 'CustomObjectTranslation'
-            when 'communities'
-              metaDataType = 'Network'
-            when 'reportTypes'
-              metaDataType = 'ReportType'
-            when 'settings'
-              metaDataType = 'Settings'
-            when 'assignmentRules'
-              metaDataType = 'AssignmentRule'
-            when 'approvalProcesses'
-              metaDataType = 'ApprovalProcess'
-            when 'escalationRules'
-              metaDataType = 'EscalationRule'
-            when 'flows'
-              metaDataType = 'Flow'
-            when 'aura'
-              metaDataType = 'AuraDefinitionBundle'
-            when 'documents'
-              metaDataType = 'Document'
-            else
-              metaDataType = null
-
-          if(metaDataType != null)
-            params = [fileNameParsed,metaDataType,folderName[0]]
-            if metaDataType == 'AuraDefinitionBundle' || metaDataType == 'Document'
-                params.push(folderName[1])
-            if @child then @abort(=> @startNewBuild(optype+'-single-file',params)) else @startNewBuild(optype+'-single-file',params)
+        fileParams = @getFileDetails(isWin, projectPath, path)
+        if(fileParams != null)
+          if(fileParams.metaDataType != null)
+            params = [fileParams.fileNameParsed, fileParams.metaDataType, fileParams.folderName[0]]
+            if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document'
+                params.push(fileParams.folderName[1])
+            if @child then @abort(=> @startNewBuild(optype+'-single-file', params, 'buildSingle')) else @startNewBuild(optype+'-single-file', params, 'buildSingle')
           else
             @buildView.buildUnsupported()
-
         else
           @buildView.buildUnsupported()
+
+  deploySeveralFiles: ->
+    @processSeveralFiles('deploy')
+
+  retrieveSeveralFiles: ->
+    @processSeveralFiles('retrieve')
+
+  processSeveralFiles: (optype) ->
+    if(@isDeployRunning())
+      clearTimeout @finishedTimer
+      if (atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?.length > 0)
+          params = {}
+          isWin = /^win/.test(process.platform)
+          projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
+          paths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+          for key, path of paths
+              fileParams = @getFileDetails(isWin, projectPath, path)
+              if (fileParams? && fileParams.metaDataType?)
+                  if !params[fileParams.metaDataType]?
+                      params[fileParams.metaDataType] = {"fld" : fileParams.folderName[0],"items" : []}
+                  if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document'
+                      if fileParams.folderName[1] not in params[fileParams.metaDataType].items && fileParams.folderName[1].length > 0
+                          params[fileParams.metaDataType].items.push(fileParams.folderName[1])
+                  else
+                      if fileParams.fileNameParsed not in params[fileParams.metaDataType].items && fileParams.fileNameParsed.length > 0
+                          params[fileParams.metaDataType].items.push(fileParams.fileNameParsed)
+          params = JSON.stringify(params);
+          if @child then @abort(=> @startNewBuild(optype, params, 'buildSeveral')) else @startNewBuild(optype, params, 'buildSeveral')
 
   stop: ->
     if @child
