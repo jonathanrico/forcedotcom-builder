@@ -193,6 +193,8 @@ module.exports =
           params.metaDataType = 'AuraDefinitionBundle'
         when 'documents'
           params.metaDataType = 'Document'
+        when 'email'
+          params.metaDataType = 'EmailTemplate'
         else
           params.metaDataType = null
     return params
@@ -212,7 +214,7 @@ module.exports =
         if(fileParams != null)
           if(fileParams.metaDataType != null)
             params = [fileParams.fileNameParsed, fileParams.metaDataType, fileParams.folderName[0]]
-            if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document'
+            if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document' || fileParams.metaDataType == 'EmailTemplate'
                 params.push(fileParams.folderName[1])
             if @child then @abort(=> @startNewBuild(optype+'-single-file', params, 'buildSingle')) else @startNewBuild(optype+'-single-file', params, 'buildSingle')
           else
@@ -236,12 +238,23 @@ module.exports =
           paths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
           for key, path of paths
               fileParams = @getFileDetails(isWin, projectPath, path)
-              if (fileParams? && fileParams.metaDataType?)
+              if (fileParams? && fileParams.metaDataType? && fileParams.fileNameParsed?)
                   if !params[fileParams.metaDataType]?
                       params[fileParams.metaDataType] = {"fld" : fileParams.folderName[0],"items" : []}
-                  if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document'
+                  if fileParams.metaDataType == 'AuraDefinitionBundle'
                       if fileParams.folderName[1] not in params[fileParams.metaDataType].items && fileParams.folderName[1].length > 0
                           params[fileParams.metaDataType].items.push(fileParams.folderName[1])
+                  else if fileParams.metaDataType == 'Document' || fileParams.metaDataType == 'EmailTemplate'
+                      subFld = null;
+                      for subItem in params[fileParams.metaDataType].items
+                          if subItem.subfld == fileParams.folderName[1] && fileParams.folderName[1].length > 0
+                              subFld = subItem;
+                              break;
+                      if (subFld == null && fileParams.folderName[1].length > 0)
+                          params[fileParams.metaDataType].items.push({"subfld":fileParams.folderName[1], "files":[]});
+                          subFld = params[fileParams.metaDataType].items[params[fileParams.metaDataType].items.length-1];
+                      if fileParams.fileNameParsed not in subFld.files
+                          subFld.files.push(fileParams.fileNameParsed);
                   else
                       if fileParams.fileNameParsed not in params[fileParams.metaDataType].items && fileParams.fileNameParsed.length > 0
                           params[fileParams.metaDataType].items.push(fileParams.fileNameParsed)
