@@ -53,7 +53,6 @@ module.exports =
     if jsonParam
         cmd += ' -D' + optype + '.several.json="' + jsonParam + '"'
     cmd += ' -f ' + @root + '/build/build.xml'
-    atom.notifications.addError(cmd, dismissable: true)
     return cmd
 
   startNewBuild:(buildTarget, params, buildType) ->
@@ -246,8 +245,7 @@ module.exports =
                   else
                       if fileParams.fileNameParsed not in params[fileParams.metaDataType].items && fileParams.fileNameParsed.length > 0
                           params[fileParams.metaDataType].items.push(fileParams.fileNameParsed)
-          params = JSON.stringify(params).replace(/"/g, '\\"');;
-          params =
+          params = JSON.stringify(params).replace(/"/g, '\\"');
           if @child then @abort(=> @startNewBuild(optype, params, 'buildSeveral')) else @startNewBuild(optype, params, 'buildSeveral')
 
   stop: ->
