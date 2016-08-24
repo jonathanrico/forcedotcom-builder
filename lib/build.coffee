@@ -4,6 +4,7 @@ qs = require 'querystring'
 pathModule = require 'path'
 
 BuildView = require './build-view'
+SfDialog = require './creating-dialog-view'
 
 module.exports =
   config:
@@ -17,6 +18,7 @@ module.exports =
 
     @root = project_paths[0]
     @buildView = new BuildView()
+    @creatingDialogView = null
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @deploySingleFileTreeView()
@@ -30,6 +32,7 @@ module.exports =
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @retrieveSeveralFiles()
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @createApexClass()
 
   deactivate: ->
     @child.kill('SIGKILL')
@@ -274,3 +277,6 @@ module.exports =
       return false
     else
       return true
+
+  createApexClass: ->
+    @creatingDialogView = new SfDialog("class");

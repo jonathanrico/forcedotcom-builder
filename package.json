@@ -17,7 +17,8 @@
       "build:sf-retrieve-unpackaged",
       "build:sf-retrieve-unpackaged-file",
       "build:sf-retrieve-unpackaged-file-treeview",
-      "build:sf-retrieve-several-files"
+      "build:sf-retrieve-several-files",
+      "forcedotcom-builder:create-apex-class"
     ]
   },
   "repository": "https://github.com/jonathanrico/forcedotcom-builder",

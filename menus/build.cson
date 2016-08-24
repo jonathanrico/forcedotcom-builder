@@ -16,10 +16,14 @@
     '.tree-view.full-menu [is="tree-view-file"]': [
         { 'label': 'Force.com : Build File', 'command': 'build:sf-deploy-file-treeview' },
         { 'label': 'Force.com : Retrieve File', 'command': 'build:sf-retrieve-unpackaged-file-treeview' },
-        {'type': 'separator'}
+        { 'type': 'separator' }
     ]
     '.tree-view.multi-select': [
         { 'label': 'Force.com : Build Files', 'command': 'build:sf-deploy-several-files' },
         { 'label': 'Force.com : Retrieve Files', 'command': 'build:sf-retrieve-several-files' },
-        {'type': 'separator'}
+        { 'type': 'separator' }
+    ]
+    '.tree-view.full-menu .directory.project-root .list-item': [
+        { 'label': 'Force.com : Create Apex Class', 'command': 'forcedotcom-builder:create-apex-class' }
+        { 'type': 'separator' }
     ]
