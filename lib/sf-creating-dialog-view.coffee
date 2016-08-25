@@ -1,7 +1,7 @@
 {TextEditorView, View, $$} = require 'atom-space-pen-views'
 
 module.exports =
-class SfDialogView extends View
+class SfCreatingDialogView extends View
   @content: ->
     @div class: 'sf-dialog-panel', =>
       @label "Label"

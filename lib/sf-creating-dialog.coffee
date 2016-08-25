@@ -1,7 +1,7 @@
-SfDialogView = require './sf-dialog-view'
+SfCreatingDialogView = require './sf-creating-dialog-view'
 
 module.exports =
-  class SfDialog
+  class SfCreatingDialog
 
     constructor: (itemType) ->
       @itemType = itemType;
@@ -11,7 +11,7 @@ module.exports =
       @apiVersions = ["37.0", "36.0", "35.0"];
       @apiVersion = @apiVersions[0];
 
-      @sfDialogView = new SfDialogView(this);
+      @sfDialogView = new SfCreatingDialogView(this);
 
     checkLabel: (labelText) ->
       /^[a-zA-Z\d\s\_]*$/.test(labelText);
@@ -38,6 +38,5 @@ module.exports =
       @checkApiVersion apiVersionText
 
     creatingCheck: () ->
-      console.log @label, @apiName, @apiVersion
       /^[a-zA-Z\d\s\_]+$/.test(@label) and /^[a-zA-Z\d\s\_]+$/.test(@apiName) and @checkApiVersion(@apiVersion)
 

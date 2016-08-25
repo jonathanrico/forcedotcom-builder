@@ -4,8 +4,7 @@ qs = require 'querystring'
 pathModule = require 'path'
 
 BuildView = require './build-view'
-SfDialog = require './sf-dialog'
-SfDialogView = require './sf-dialog-view'
+SfCreatingDialog = require './sf-creating-dialog'
 
 module.exports =
   config:
@@ -279,4 +278,4 @@ module.exports =
       return true
 
   createApexClass: ->
-    new SfDialog("Class");
+    new SfCreatingDialog("Class");
