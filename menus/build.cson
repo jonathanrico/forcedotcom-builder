@@ -38,6 +38,9 @@
             'label': 'Force.com Builder'
             'submenu': [
                 { 'label': 'Create Apex Class', 'command': 'forcedotcom-builder:create-apex-class' }
+                { 'label': 'Create Apex Trigger', 'command': 'forcedotcom-builder:create-apex-trigger' }
+                { 'label': 'Create Visualforce Page', 'command': 'forcedotcom-builder:create-vf-page' }
+                { 'label': 'Create Visualforce Component', 'command': 'forcedotcom-builder:create-vf-component' }
             ]
         }
         { 'type': 'separator' }

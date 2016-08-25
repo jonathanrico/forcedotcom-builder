@@ -31,7 +31,10 @@ module.exports =
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @retrieveSeveralFiles()
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @createApexClass()
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @creatingDialog("Class")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-trigger', => @creatingDialog("Trigger")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-page', => @creatingDialog("Page")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-component', => @creatingDialog("Component")
 
   deactivate: ->
     @child.kill('SIGKILL')
@@ -277,5 +280,5 @@ module.exports =
     else
       return true
 
-  createApexClass: ->
-    new SfCreatingDialog("Class");
+  creatingDialog: (itemType)->
+    new SfCreatingDialog(itemType, this);

@@ -3,7 +3,8 @@ SfCreatingDialogView = require './sf-creating-dialog-view'
 module.exports =
   class SfCreatingDialog
 
-    constructor: (itemType) ->
+    constructor: (itemType, builder) ->
+      @builder = builder;
       @itemType = itemType;
 
       @label = itemType + ' Name';
