@@ -1,48 +1,74 @@
-{TextEditorView, View} = require 'atom-space-pen-views'
-
-labels =
-	"common" :
-		"cancelButton" : "Cancel"
-	"class" :
-		"createButton" : "Create Class"
-	"page" :
-		"createButton" : "Create Page"
-
+{TextEditorView, View, $$} = require 'atom-space-pen-views'
 
 module.exports =
 class SfDialogView extends View
   @content: ->
     @div class: 'sf-dialog-panel', =>
       @label "Label"
-      @subview 'labelItem', new TextEditorView(mini: true)
+      @subview 'labelElement', new TextEditorView(mini: true)
       @label "API Name"
-      @subview 'apiNameItem', new TextEditorView(mini: true)
+      @subview 'apiNameElement', new TextEditorView(mini: true)
       @label "API Version"
-      @select class: "form-control", outlet: "apiVersion", =>
-      	@option value: "37.0", "37.0"
-      @button class: "btn btn-success create-btn", outlet: "createButton"
-      @button class: "btn btn-danger cancel-btn", outlet: "cancelButton", labels["common"]["cancelButton"]
+      @select class: "form-control", outlet: "apiVersionElement"
+      @button class: "btn btn-success create-btn disabled", outlet: "createButton"
+      @button class: "btn btn-danger cancel-btn", outlet: "cancelButton", "Cancel"
 
-  initialize: (dialog, itemType) ->
-  	@modelDialog = dialog;
-  	@type = itemType;
+  initialize: (dialog) ->
+    @model = dialog;
 
-  	@createButton.text(labels[@type]["createButton"]);
+    #Set initial values
+    @createButton.text("Create " + @model.itemType);
+    @labelElement.getModel().getBuffer().setText(@model.label);
+    @apiNameElement.getModel().getBuffer().setText(@model.apiName);
 
-  	@labelItem.getModel().getBuffer().onDidChange (oldRange, newRange, oldText, newText) =>
-  		console.log(@labelItem.getModel().getText())
+    for apiVersionItem in @model.apiVersions
+      thisOption = $$ ->
+        @option value: apiVersionItem, apiVersionItem
+      if apiVersionItem == @model.apiVersion
+        thisOption.attr "selected", "selected"
+      @apiVersionElement.append(thisOption);
 
-  	@createButton.on 'click', (e) =>
-  		@create()
+    #Set methods
+    @labelElement.getModel().onDidChange () =>
+      if not @model.setLabel @labelElement.getModel().getText()
+        @labelElement.getModel().undo()
+      else
+        newApiName = @labelElement.getModel().getText().replace(/\s/g,'_')
+        if @model.setApiName newApiName
+          @apiNameElement.getModel().setText(newApiName)
+      @createAllow()
 
-  	@cancelButton.on 'click', (e) =>
-  		@cancel();
+    @apiNameElement.getModel().onDidChange () =>
+      if not @model.setApiName @apiNameElement.getModel().getText()
+        @apiNameElement.getModel().undo()
+      @createAllow()
 
-  	@panel ?= atom.workspace.addModalPanel(item: this)
-  	@panel.show();
+    @apiVersionElement.on "change", (e) =>
+      @model.setApiVersion @apiVersionElement.val()
+      @createAllow()
+
+    @createButton.on 'click', (e) =>
+      @create()
+
+    @cancelButton.on 'click', (e) =>
+      @cancel();
+
+    @createAllow()
+
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show();
+
+  createAllow: () ->
+    if @model.creatingCheck()
+      @createButton.removeClass('disabled')
+    else
+      @createButton.addClass('disabled')
 
   create: () ->
-  	alert(@labelItem.getModel().getText());
+    if not @createButton.hasClass 'disabled'
+      console.log @model
 
   cancel: () ->
-  	@panel.destroy();
+    @panel.destroy();
+    delete @model
+    delete this

@@ -20,11 +20,6 @@ module.exports =
     @root = project_paths[0]
     @buildView = new BuildView()
 
-    #atom.views.addViewProvider SfDialog, (sfDialog) ->
-    #  sfDialogView = new SfDialogView()
-    #  sfDialogView.initialize(sfDialog);
-    #  sfDialogView.element
-
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @deploySingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-deploy', => @deploy()
@@ -284,4 +279,4 @@ module.exports =
       return true
 
   createApexClass: ->
-    new SfDialog("class");
+    new SfDialog("Class");
