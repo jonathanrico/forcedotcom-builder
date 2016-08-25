@@ -41,3 +41,7 @@ module.exports =
     creatingCheck: () ->
       /^[a-zA-Z\d\s\_]+$/.test(@label) and /^[a-zA-Z\d\s\_]+$/.test(@apiName) and @checkApiVersion(@apiVersion)
 
+    create: (callback) ->
+      if @creatingCheck
+        @builder.createSfItem this, callback
+

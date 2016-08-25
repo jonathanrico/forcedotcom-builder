@@ -66,7 +66,8 @@ class SfCreatingDialogView extends View
 
   create: () ->
     if not @createButton.hasClass 'disabled'
-      console.log @model
+      @model.create () => 
+        @cancel()
 
   cancel: () ->
     @panel.destroy();

@@ -280,5 +280,10 @@ module.exports =
     else
       return true
 
-  creatingDialog: (itemType)->
+  creatingDialog: (itemType) ->
     new SfCreatingDialog(itemType, this);
+
+  createSfItem: (sfCreatingDialog, callback) ->
+    console.log sfCreatingDialog
+    if callback
+      callback()
