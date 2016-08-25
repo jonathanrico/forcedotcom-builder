@@ -4,7 +4,8 @@ qs = require 'querystring'
 pathModule = require 'path'
 
 BuildView = require './build-view'
-SfDialog = require './creating-dialog-view'
+SfDialog = require './sf-dialog'
+SfDialogView = require './sf-dialog-view'
 
 module.exports =
   config:
@@ -18,7 +19,11 @@ module.exports =
 
     @root = project_paths[0]
     @buildView = new BuildView()
-    @creatingDialogView = null
+
+    #atom.views.addViewProvider SfDialog, (sfDialog) ->
+    #  sfDialogView = new SfDialogView()
+    #  sfDialogView.initialize(sfDialog);
+    #  sfDialogView.element
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
     atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @deploySingleFileTreeView()
@@ -279,4 +284,4 @@ module.exports =
       return true
 
   createApexClass: ->
-    @creatingDialogView = new SfDialog("class");
+    new SfDialog("class");
