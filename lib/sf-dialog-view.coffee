@@ -13,8 +13,13 @@ module.exports =
 class SfDialogView extends View
   @content: ->
     @div class: 'sf-dialog-panel', =>
-      @div "Type your answer:"
-      @subview 'answer', new TextEditorView(mini: true)
+      @label "Label"
+      @subview 'labelItem', new TextEditorView(mini: true)
+      @label "API Name"
+      @subview 'apiNameItem', new TextEditorView(mini: true)
+      @label "API Version"
+      @select class: "form-control", outlet: "apiVersion", =>
+      	@option value: "37.0", "37.0"
       @button class: "btn btn-success create-btn", outlet: "createButton"
       @button class: "btn btn-danger cancel-btn", outlet: "cancelButton", labels["common"]["cancelButton"]
 
@@ -24,8 +29,8 @@ class SfDialogView extends View
 
   	@createButton.text(labels[@type]["createButton"]);
 
-  	@answer.getModel().getBuffer().onDidChange (oldRange, newRange, oldText, newText) =>
-  		console.log(@answer.getModel().getText())
+  	@labelItem.getModel().getBuffer().onDidChange (oldRange, newRange, oldText, newText) =>
+  		console.log(@labelItem.getModel().getText())
 
   	@createButton.on 'click', (e) =>
   		@create()
@@ -37,7 +42,7 @@ class SfDialogView extends View
   	@panel.show();
 
   create: () ->
-  	alert(@answer.getModel().getText());
+  	alert(@labelItem.getModel().getText());
 
   cancel: () ->
   	@panel.destroy();
