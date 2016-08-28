@@ -30,22 +30,25 @@ class SfCreatingDialogView extends View
 
     #Set methods
     @labelElement.getModel().onDidChange () =>
-      if not @model.setLabel @labelElement.getModel().getText()
-        @labelElement.getModel().undo()
-      else
-        newApiName = @labelElement.getModel().getText().replace(/\s/g,'_')
-        if @model.setApiName newApiName
-          @apiNameElement.getModel().setText(newApiName)
-      @createAllow()
+      if @model
+        if not @model.setLabel @labelElement.getModel().getText()
+          @labelElement.getModel().undo()
+        else
+          newApiName = @labelElement.getModel().getText().replace(/\s/g,'_')
+          if @model.setApiName newApiName
+            @apiNameElement.getModel().setText(newApiName)
+        @createAllow()
 
     @apiNameElement.getModel().onDidChange () =>
-      if not @model.setApiName @apiNameElement.getModel().getText()
-        @apiNameElement.getModel().undo()
-      @createAllow()
+      if @model
+        if not @model.setApiName @apiNameElement.getModel().getText()
+          @apiNameElement.getModel().undo()
+        @createAllow()
 
     @apiVersionElement.on "change", (e) =>
-      @model.setApiVersion @apiVersionElement.val()
-      @createAllow()
+      if @model
+        @model.setApiVersion @apiVersionElement.val()
+        @createAllow()
 
     @createButton.on 'click', (e) =>
       @create()
