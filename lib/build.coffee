@@ -284,6 +284,21 @@ module.exports =
     new SfCreatingDialog(itemType, this);
 
   createSfItem: (sfCreatingDialog, callback) ->
-    console.log sfCreatingDialog
+    isWin = /^win/.test(process.platform)
+    projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
+    openTabPath
+    if sfCreatingDialog.itemType == "Class"
+      fileDirPath = if isWin then projectPath+'\\classes\\' else projectPath+'/classes/'
+      srcNewFile = fs.createWriteStream fileDirPath+sfCreatingDialog.apiName+".cls"
+      srcNewFile.write "New file content"
+      srcNewFile.close()
+      openTabPath = fileDirPath+sfCreatingDialog.apiName+".cls"
+    else if sfCreatingDialog.itemType == "Trigger"
+      console.log "trigger"
+    else if sfCreatingDialog.itemType == "Page"
+      console.log "page"
+    else if sfCreatingDialog.itemType == "Component"
+      console.log "component"
+    atom.workspace.open openTabPath
     if callback
       callback()
