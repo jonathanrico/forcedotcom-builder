@@ -5,7 +5,7 @@ module.exports =
     /^win/.test process.platform
 
   getPlatformPath: (str) ->
-    if @isWin() then str.replaceAll /\//g, '\\' else str
+    if @isWin() then str.replace /\//g, '\\' else str
 
   getSrcPath: (root) ->
     root + @getPlatformPath('/src/')
