@@ -3,7 +3,9 @@ fs = require 'fs'
 qs = require 'querystring'
 pathModule = require 'path'
 
+utils = require './utils'
 BuildView = require './build-view'
+SfCreatingDialog = require './sf-creating-dialog'
 
 module.exports =
   config:
@@ -30,6 +32,10 @@ module.exports =
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
     atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @retrieveSeveralFiles()
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @creatingDialog("Class")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-trigger', => @creatingDialog("Trigger")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-page', => @creatingDialog("Page")
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-component', => @creatingDialog("Component")
 
   deactivate: ->
     @child.kill('SIGKILL')
@@ -274,3 +280,11 @@ module.exports =
       return false
     else
       return true
+
+  creatingDialog: (itemType) ->
+    new SfCreatingDialog(itemType, this);
+
+  createSfItem: (sfCreatingDialog, callback) ->
+    atom.workspace.open utils.createSfItem(sfCreatingDialog, @root)
+    if callback
+      callback()

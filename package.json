@@ -17,7 +17,11 @@
       "build:sf-retrieve-unpackaged",
       "build:sf-retrieve-unpackaged-file",
       "build:sf-retrieve-unpackaged-file-treeview",
-      "build:sf-retrieve-several-files"
+      "build:sf-retrieve-several-files",
+      "forcedotcom-builder:create-apex-class",
+      "forcedotcom-builder:create-apex-trigger",
+      "forcedotcom-builder:create-vf-page",
+      "forcedotcom-builder:create-vf-component"
     ]
   },
   "repository": "https://github.com/jonathanrico/forcedotcom-builder",
@@ -26,6 +30,7 @@
     "atom": ">=0.50.0"
   },
   "dependencies": {
-    "atom-message-panel": ">=1.0.0"
+    "atom-message-panel": ">=1.0.0",
+    "atom-space-pen-views": "~2.2.0"
   }
 }
