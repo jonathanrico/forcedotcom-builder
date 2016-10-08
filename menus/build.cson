@@ -27,6 +27,7 @@
                 { 'label': 'Build Static Resources', 'command': 'build:sf-deploy-staticres'},
                 { 'label': 'Build Apex', 'command': 'build:sf-deploy-apex' },
                 { 'label': 'Build Visualforce', 'command': 'build:sf-deploy-visualforce'}
+                { 'label': 'Retrieve Unpackaged', 'command': 'build:sf-retrieve-unpackaged'}
                 { 'type': 'separator' }
                 { 'label': 'Create Apex Class', 'command': 'forcedotcom-builder:create-apex-class' }
                 { 'label': 'Create Apex Trigger', 'command': 'forcedotcom-builder:create-apex-trigger' }

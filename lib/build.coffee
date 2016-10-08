@@ -6,6 +6,7 @@ pathModule = require 'path'
 utils = require './utils'
 BuildView = require './build-view'
 SfCreatingDialog = require './sf-creating-dialog'
+ProjectDialog = require './project-dialog'
 
 module.exports =
   config:
@@ -13,29 +14,69 @@ module.exports =
     arguments: ""
 
   activate: (state) ->
-    project_paths = atom.project.getPaths()
-    if !project_paths
-        return
-
-    @root = project_paths[0]
     @buildView = new BuildView()
 
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @deploySingleFile()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @deploySingleFileTreeView()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy', => @deploy()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @deployStaticRes()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @deployApex()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @deployVisualforce()
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-several-files', => @deploySeveralFiles()
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @retrieveUnpackaged()
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @retrieveSingleFile()
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @retrieveSingleFileTreeView()
+    atom.commands.add 'atom-workspace', 'build:sf-deploy', => @getProjectPath("treeview-project", @deploy, null)
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @getProjectPath("treeview-project", @deployStaticRes, null)
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @getProjectPath("treeview-project", @deployApex, null)
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @getProjectPath("treeview-project", @deployVisualforce, null)
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @getProjectPath("treeview-project", @retrieveUnpackaged, null)
+
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @getProjectPath("editor", @deploySingleFile, null)
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @getProjectPath("editor", @retrieveSingleFile, null)
+
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @getProjectPath("treeview-single", @deploySingleFileTreeView, null)
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @getProjectPath("treeview-single", @retrieveSingleFileTreeView, null)
+
+    atom.commands.add 'atom-workspace', 'build:sf-deploy-several-files', => @getProjectPath("treeview-multiple", @deploySeveralFiles, null)
+    atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @getProjectPath("treeview-multiple", @retrieveSeveralFiles, null)
+
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @getProjectPath("treeview-project", @creatingDialog, ["Class"])
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-trigger', => @getProjectPath("treeview-project", @creatingDialog, ["Trigger"])
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-component', => @getProjectPath("treeview-project", @creatingDialog, ["Component"])
+
     atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @retrieveSeveralFiles()
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @creatingDialog("Class")
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-trigger', => @creatingDialog("Trigger")
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-page', => @creatingDialog("Page")
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-component', => @creatingDialog("Component")
+
+  getProjectPath: (projectSelector, callback, callbackArgs) ->
+    root = null
+    if (projectSelector == "treeview-project" && atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?)
+      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+      if (selectedPaths.length == 1)
+        if (selectedPaths[0] in atom.project.getPaths())
+          root = selectedPaths[0]
+    else if (projectSelector == "editor")
+      if atom.workspace.getActiveTextEditor()?.getPath()?
+        [root, relativePath] = atom.project.relativizePath(atom.workspace.getActiveTextEditor().getPath())
+    else if (projectSelector == "treeview-single")
+      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+      if (selectedPaths.length == 1)
+        [root, relativePath] = atom.project.relativizePath(selectedPaths[0])
+    else if (projectSelector == "treeview-multiple")
+      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+      if (selectedPaths.length > 0)
+        [tmpRoot, relativePath] = atom.project.relativizePath(selectedPaths[0])
+        for selectedPath in selectedPaths
+          [cmpRoot, relativePath] = atom.project.relativizePath(selectedPath)
+          if (tmpRoot != cmpRoot)
+            tmpRoot = null
+            break
+        root = tmpRoot
+
+    if (root == null && atom.project.getPaths().length > 0)
+      if (atom.project.getPaths().length == 1)
+        root = atom.project.getPaths()[0]
+      else
+        new ProjectDialog(this, callback, callbackArgs)
+        return
+    
+    if (atom.project.getPaths()?.length <= 0)
+      atom.notifications.addError("Your project has no project folders", dismissable: true);
+
+    if (root != null)
+      @root = root;
+      if (callback)
+        callback.apply(this, callbackArgs)
 
   deactivate: ->
     @child.kill('SIGKILL')
@@ -214,9 +255,8 @@ module.exports =
       else if(cmdtype == 'treeview' && atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?)
         path = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()[0]
       if(path)
-        isWin = /^win/.test(process.platform)
-        projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
-        fileParams = @getFileDetails(isWin, projectPath, path)
+        projectPath = utils.getSrcPath(@root)
+        fileParams = @getFileDetails(utils.isWin(), projectPath, path)
         if(fileParams != null)
           if(fileParams.metaDataType != null)
             params = [fileParams.fileNameParsed, fileParams.metaDataType, fileParams.folderName[0]]
@@ -239,11 +279,10 @@ module.exports =
       clearTimeout @finishedTimer
       if (atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?.length > 0)
           params = {}
-          isWin = /^win/.test(process.platform)
-          projectPath = if isWin then @root+'\\src\\' else @root+'/src/'
+          projectPath = utils.getSrcPath(@root)
           paths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
           for key, path of paths
-              fileParams = @getFileDetails(isWin, projectPath, path)
+              fileParams = @getFileDetails(utils.isWin(), projectPath, path)
               if (fileParams? && fileParams.metaDataType? && fileParams.fileNameParsed?)
                   if !params[fileParams.metaDataType]?
                       params[fileParams.metaDataType] = {"fld" : fileParams.folderName[0],"items" : []}
