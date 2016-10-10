@@ -1,3 +1,14 @@
+'menu':[
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Force.com'
+      'submenu': [
+        { 'label': 'Generate Project', 'command': 'forcedotcom-builder:sf-generate-project' }
+      ]
+    ]
+  }
+]
 'context-menu':
     '.tree-view.full-menu [is="tree-view-file"]': [
         { 
