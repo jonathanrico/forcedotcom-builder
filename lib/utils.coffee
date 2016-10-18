@@ -89,3 +89,15 @@ module.exports =
     itemParams = @getSfCreatingItemParams(sfCreatingDialog, root)
     @writeMeta itemParams
     @writeSrc itemParams
+
+#-----------
+
+  deleteFolderRecursive: (path) ->
+    if fs.existsSync(path)
+      fs.readdirSync(path).forEach (file, index) =>
+        curPath = path + "/" + file
+        if fs.lstatSync(curPath).isDirectory()
+          @deleteFolderRecursive(curPath);
+        else
+          fs.unlinkSync(curPath);
+      fs.rmdirSync(path);

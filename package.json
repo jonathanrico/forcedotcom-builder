@@ -6,6 +6,7 @@
   "description": "Build your Force.com projects, straight from Atom",
   "activationCommands": {
     "atom-workspace": [
+      "forcedotcom-builder:sf-generate-project",
       "build:sf-deploy-file",
       "build:sf-deploy-file-treeview",
       "build:sf-deploy",
