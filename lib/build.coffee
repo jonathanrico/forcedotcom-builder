@@ -2,6 +2,8 @@ child_process = require 'child_process'
 fs = require 'fs'
 qs = require 'querystring'
 pathModule = require 'path'
+remote = require "remote"
+dialog = remote.require "dialog"
 
 utils = require './utils'
 BuildView = require './build-view'
@@ -15,6 +17,8 @@ module.exports =
 
   activate: (state) ->
     @buildView = new BuildView()
+
+    atom.commands.add 'atom-workspace', 'forcedotcom-builder:sf-generate-project', => @generateProject()
 
     atom.commands.add 'atom-workspace', 'build:sf-deploy', => @getProjectPath("treeview-project", @deploy, null)
     atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @getProjectPath("treeview-project", @deployStaticRes, null)
@@ -327,3 +331,50 @@ module.exports =
     atom.workspace.open utils.createSfItem(sfCreatingDialog, @root)
     if callback
       callback()
+
+  generateProject: () ->
+    newProjectPath = dialog.showOpenDialog({
+      title:'Create Project', 
+      buttonLabel:'Generate' 
+      properties:['openDirectory', 'createDirectory']
+    });
+    newProjectPath = newProjectPath[0]
+
+    args = {
+      encoding: 'utf8',
+      timeout: 0,
+      maxBuffer: 2000*1024,
+      killSignal: 'SIGTERM',
+      cwd: newProjectPath,
+      env: null
+    }
+
+    @child = child_process.exec('git init', args)
+
+    @child.stdout.on 'data', @buildView.append
+    @child.stderr.on 'data', @buildView.append
+    @child.on "close", (exitCode) =>
+      #@buildView.buildFinished(0 == exitCode)
+      @child = child_process.exec('git remote add origin https://github.com/jonathanrico/forcedotcom-project.git', args)
+      @child.stdout.on 'data', @buildView.append
+      @child.stderr.on 'data', @buildView.append
+      @child.on "close", (exitCode) =>
+        @child = child_process.exec('git pull origin master', args)
+        @child.stdout.on 'data', @buildView.append
+        @child.stderr.on 'data', @buildView.append
+        @child.on "close", (exitCode) =>
+          utils.deleteFolderRecursive utils.getPlatformPath(newProjectPath + '/.git')
+          @child = child_process.exec('git init', args)
+          @child.stdout.on 'data', @buildView.append
+          @child.stderr.on 'data', @buildView.append
+          @child.on "close", (exitCode) =>
+            fs.createReadStream(
+              utils.getPlatformPath(newProjectPath + '/build/sample-sfdc-build.properties')
+            ).pipe(
+              fs.createWriteStream(utils.getPlatformPath(newProjectPath + '/build/sfdc-build.properties'))
+            );
+            atom.project.addPath(utils.getPlatformPath(newProjectPath))
+            atom.workspace.open(utils.getPlatformPath(newProjectPath + '/build/sfdc-build.properties'))
+            @child = null
+            @buildView.buildFinished(true)
+    @buildView.buildStarted()

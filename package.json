@@ -1,11 +1,12 @@
 {
   "name": "forcedotcom-builder",
   "main": "./lib/build",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Build your Force.com projects, straight from Atom",
   "activationCommands": {
     "atom-workspace": [
+      "forcedotcom-builder:sf-generate-project",
       "build:sf-deploy-file",
       "build:sf-deploy-file-treeview",
       "build:sf-deploy",
