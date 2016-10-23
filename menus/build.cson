@@ -4,45 +4,51 @@
     'submenu': [
       'label': 'Force.com'
       'submenu': [
-        { 'label': 'Generate Project', 'command': 'forcedotcom-builder:sf-generate-project' }
+        { 'label': 'Generate Project', 'command': 'force.com:generate-project' }
+        { 'label': 'Deploy Current Project', 'command': 'force.com:deploy-project' }
+        { 'label': 'Deploy Static Resources', 'command': 'force.com:deploy-staticres'}
+        { 'label': 'Deploy Apex', 'command': 'force.com:deploy-apex' }
+        { 'label': 'Deploy Visualforce', 'command': 'force.com:deploy-visualforce'}
+        { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-project'}
       ]
     ]
   }
 ]
 'context-menu':
     '.tree-view.full-menu [is="tree-view-file"]': [
-        { 
+        {
             'label': 'Force.com Builder'
             'submenu': [
-                { 'label': 'Build File', 'command': 'build:sf-deploy-file-treeview' }
-                { 'label': 'Retrieve File', 'command': 'build:sf-retrieve-unpackaged-file-treeview' }
+                { 'label': 'Deploy File', 'command': 'force.com:deploy-file-treeview' }
+                { 'label': 'Retrieve File', 'command': 'force.com:retrieve-file-treeview' }
             ]
         }
         { 'type': 'separator' }
     ]
     '.tree-view.multi-select': [
-        { 
+        {
             'label': 'Force.com Builder'
             'submenu': [
-                { 'label': 'Build Files', 'command': 'build:sf-deploy-several-files' }
-                { 'label': 'Retrieve Files', 'command': 'build:sf-retrieve-several-files' }
+                { 'label': 'Deploy Files', 'command': 'force.com:deploy-selected-files' }
+                { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-selected-files' }
             ]
         }
         { 'type': 'separator' }
     ]
     '.tree-view.full-menu .directory.project-root>.list-item': [
-        { 
+        {
             'label': 'Force.com Builder'
             'submenu': [
-                { 'label': 'Build Current Project', 'command': 'build:sf-deploy' },
-                { 'label': 'Build Static Resources', 'command': 'build:sf-deploy-staticres'},
-                { 'label': 'Build Apex', 'command': 'build:sf-deploy-apex' },
-                { 'label': 'Build Visualforce', 'command': 'build:sf-deploy-visualforce'}
+                { 'label': 'Deploy Current Project', 'command': 'force.com:deploy-project' }
+                { 'label': 'Deploy Static Resources', 'command': 'force.com:deploy-staticres' }
+                { 'label': 'Deploy Apex', 'command': 'force.com:deploy-apex' }
+                { 'label': 'Deploy Visualforce', 'command': 'force.com:deploy-visualforce' }
+                { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-project' }
                 { 'type': 'separator' }
-                { 'label': 'Create Apex Class', 'command': 'forcedotcom-builder:create-apex-class' }
-                { 'label': 'Create Apex Trigger', 'command': 'forcedotcom-builder:create-apex-trigger' }
-                { 'label': 'Create Visualforce Page', 'command': 'forcedotcom-builder:create-vf-page' }
-                { 'label': 'Create Visualforce Component', 'command': 'forcedotcom-builder:create-vf-component' }
+                { 'label': 'New Apex Class', 'command': 'force.com:new-apex-class' }
+                { 'label': 'New Apex Trigger', 'command': 'force.com:new-apex-trigger' }
+                { 'label': 'New Visualforce Page', 'command': 'force.com:new-vf-page' }
+                { 'label': 'New Visualforce Component', 'command': 'force.com:new-vf-component' }
             ]
         }
         { 'type': 'separator' }
