@@ -1,7 +1,7 @@
 '.platform-darwin atom-workspace':
-  'alt-cmd-b': 'build:sf-deploy-file'
-  'alt-cmd-r': 'build:sf-retrieve-unpackaged-file'
+  'alt-cmd-b': 'force.com:deploy-current-file'
+  'alt-cmd-r': 'force.com:retrieve-current-file'
 
 '.platform-win32 atom-workspace, .platform-linux atom-workspace':
-  'alt-ctrl-u': 'build:sf-deploy-file'
-  'alt-ctrl-r': 'build:sf-retrieve-unpackaged-file'
+  'alt-ctrl-u': 'force.com:deploy-current-file'
+  'alt-ctrl-r': 'force.com:retrieve-current-file'

@@ -18,29 +18,29 @@ module.exports =
   activate: (state) ->
     @buildView = new BuildView()
 
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:sf-generate-project', => @generateProject()
+    atom.commands.add 'atom-workspace', 'force.com:generate-project', => @generateProject()
 
-    atom.commands.add 'atom-workspace', 'build:sf-deploy', => @getProjectPath("treeview-project", @deploy, null)
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-static-res', => @getProjectPath("treeview-project", @deployStaticRes, null)
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-apex', => @getProjectPath("treeview-project", @deployApex, null)
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-visualforce', => @getProjectPath("treeview-project", @deployVisualforce, null)
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged', => @getProjectPath("treeview-project", @retrieveUnpackaged, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-project', => @getProjectPath("treeview-project", @deploy, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-static-res', => @getProjectPath("treeview-project", @deployStaticRes, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-apex', => @getProjectPath("treeview-project", @deployApex, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-visualforce', => @getProjectPath("treeview-project", @deployVisualforce, null)
+    atom.commands.add 'atom-workspace', 'force.com:retrieve-project', => @getProjectPath("treeview-project", @retrieveUnpackaged, null)
 
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-file', => @getProjectPath("editor", @deploySingleFile, null)
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file', => @getProjectPath("editor", @retrieveSingleFile, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-current-file', => @getProjectPath("editor", @deploySingleFile, null)
+    atom.commands.add 'atom-workspace', 'force.com:retrieve-current-file', => @getProjectPath("editor", @retrieveSingleFile, null)
 
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-file-treeview', => @getProjectPath("treeview-single", @deploySingleFileTreeView, null)
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-unpackaged-file-treeview', => @getProjectPath("treeview-single", @retrieveSingleFileTreeView, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-file-treeview', => @getProjectPath("treeview-single", @deploySingleFileTreeView, null)
+    atom.commands.add 'atom-workspace', 'force.com:retrieve-file-treeview', => @getProjectPath("treeview-single", @retrieveSingleFileTreeView, null)
 
-    atom.commands.add 'atom-workspace', 'build:sf-deploy-several-files', => @getProjectPath("treeview-multiple", @deploySeveralFiles, null)
-    atom.commands.add 'atom-workspace', 'build:sf-retrieve-several-files', => @getProjectPath("treeview-multiple", @retrieveSeveralFiles, null)
+    atom.commands.add 'atom-workspace', 'force.com:deploy-selected-files', => @getProjectPath("treeview-multiple", @deploySeveralFiles, null)
+    atom.commands.add 'atom-workspace', 'force.com:retrieve-selected-files', => @getProjectPath("treeview-multiple", @retrieveSeveralFiles, null)
 
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-class', => @getProjectPath("treeview-project", @creatingDialog, ["Class"])
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-apex-trigger', => @getProjectPath("treeview-project", @creatingDialog, ["Trigger"])
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
-    atom.commands.add 'atom-workspace', 'forcedotcom-builder:create-vf-component', => @getProjectPath("treeview-project", @creatingDialog, ["Component"])
+    atom.commands.add 'atom-workspace', 'force.com:new-apex-class', => @getProjectPath("treeview-project", @creatingDialog, ["Class"])
+    atom.commands.add 'atom-workspace', 'force.com:new-apex-trigger', => @getProjectPath("treeview-project", @creatingDialog, ["Trigger"])
+    atom.commands.add 'atom-workspace', 'force.com:new-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
+    atom.commands.add 'atom-workspace', 'force.com:new-vf-component', => @getProjectPath("treeview-project", @creatingDialog, ["Component"])
 
-    atom.commands.add 'atom-workspace', 'build:sf-abort', => @stop()
+    atom.commands.add 'atom-workspace', 'force.com:abort', => @stop()
 
   getProjectPath: (projectSelector, callback, callbackArgs) ->
     root = null
@@ -73,7 +73,7 @@ module.exports =
       else
         new ProjectDialog(this, callback, callbackArgs)
         return
-    
+
     if (atom.project.getPaths()?.length <= 0)
       atom.notifications.addError("Your project has no project folders", dismissable: true);
 
@@ -334,8 +334,8 @@ module.exports =
 
   generateProject: () ->
     newProjectPath = dialog.showOpenDialog({
-      title:'Create Project', 
-      buttonLabel:'Generate' 
+      title:'Create Project',
+      buttonLabel:'Generate'
       properties:['openDirectory', 'createDirectory']
     });
     newProjectPath = newProjectPath[0]

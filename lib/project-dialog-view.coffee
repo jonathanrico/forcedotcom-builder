@@ -1,4 +1,4 @@
-{View, $$} = require 'atom-space-pen-views'
+{View, $$} = require 'space-pen'
 
 module.exports =
 class ProjectDialogView extends View
@@ -47,7 +47,7 @@ class ProjectDialogView extends View
 
   apply: () ->
     if not @applyButton.hasClass 'disabled'
-      @model.applyProject () => 
+      @model.applyProject () =>
         @cancel()
 
   cancel: () ->
