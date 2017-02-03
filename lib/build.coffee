@@ -3,7 +3,6 @@ fs = require 'fs'
 qs = require 'querystring'
 pathModule = require 'path'
 remote = require "remote"
-dialog = remote.require "dialog"
 
 utils = require './utils'
 BuildView = require './build-view'
@@ -333,11 +332,13 @@ module.exports =
       callback()
 
   generateProject: () ->
-    newProjectPath = dialog.showOpenDialog({
+    newProjectPath = remote.dialog.showOpenDialog({
       title:'Create Project',
       buttonLabel:'Generate'
       properties:['openDirectory', 'createDirectory']
     });
+    if typeof newProjectPath == 'undefined'
+      return;
     newProjectPath = newProjectPath[0]
 
     args = {
