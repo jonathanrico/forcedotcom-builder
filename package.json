@@ -7,6 +7,7 @@
   "activationCommands": {
     "atom-workspace": [
       "force.com:generate-project",
+      "force.com:go-to-wiki",
       "force.com:deploy-current-file",
       "force.com:deploy-file-treeview",
       "force.com:deploy-project",

@@ -10,6 +10,8 @@
         { 'label': 'Deploy Apex', 'command': 'force.com:deploy-apex' }
         { 'label': 'Deploy Visualforce', 'command': 'force.com:deploy-visualforce'}
         { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-project'}
+        { 'type': 'separator' }
+        { 'label': 'Go to the Wiki', 'command': 'force.com:go-to-wiki'}
       ]
     ]
   }
