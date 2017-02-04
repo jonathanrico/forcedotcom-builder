@@ -1,3 +1,4 @@
+child_process = require 'child_process'
 fs = require 'fs'
 
 module.exports =
@@ -101,3 +102,54 @@ module.exports =
         else
           fs.unlinkSync(curPath);
       fs.rmdirSync(path);
+
+#-----------
+
+  runProcess: (child, view, command, args, beforeCommand, afterCommand, onclose) ->
+    if beforeCommand
+      beforeCommand()
+    child = child_process.exec(command, args)
+    child.stdout.on 'data', view.append
+    child.stderr.on 'data', view.append
+    child.on "close", onclose
+    if afterCommand
+      afterCommand()
+
+#-----------
+
+  getMetaDataFromFolderName: (folderName) ->
+    folderMapping = {
+      'classes' : 'ApexClass'
+      ,'triggers' : 'ApexTrigger'
+      ,'pages' : 'ApexPage'
+      ,'components' : 'ApexComponent'
+      ,'staticresources' : 'StaticResource'
+      ,'applications' : 'CustomApplication'
+      ,'objects' : 'CustomObject'
+      ,'tabs' : 'CustomTab'
+      ,'layouts' : 'Layout'
+      ,'quickActions' : 'QuickAction'
+      ,'profiles' : 'Profile'
+      ,'labels' : 'CustomLabels'
+      ,'workflows' : 'Workflow'
+      ,'remoteSiteSettings' : 'RemoteSiteSetting'
+      ,'permissionsets' : 'PermissionSet'
+      ,'letterhead' : 'Letterhead'
+      ,'translations' : 'Translations'
+      ,'groups' : 'Group'
+      ,'objectTranslations' : 'CustomObjectTranslation'
+      ,'communities' : 'Network'
+      ,'reportTypes' : 'ReportType'
+      ,'settings' : 'Settings'
+      ,'assignmentRules' : 'AssignmentRule'
+      ,'approvalProcesses' : 'ApprovalProcess'
+      ,'escalationRules' : 'EscalationRule'
+      ,'flows' : 'Flow'
+      ,'aura' : 'AuraDefinitionBundle'
+      ,'documents' : 'Document'
+      ,'email' : 'EmailTemplate'
+    }
+    result = null
+    if folderMapping.hasOwnProperty folderName
+      result = folderMapping[folderName]
+    result

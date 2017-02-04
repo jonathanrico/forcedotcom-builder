@@ -1,4 +1,3 @@
-child_process = require 'child_process'
 shell = require 'shell'
 fs = require 'fs'
 qs = require 'querystring'
@@ -127,15 +126,10 @@ module.exports =
       env: null
     }
 
-    @child = child_process.exec(cmd,args)
-
-    @child.stdout.on 'data', @buildView.append
-    @child.stderr.on 'data', @buildView.append
-    @child.on 'close', (exitCode) =>
+    utils.runProcess(@child, @buildView, cmd, args, null, @buildView.buildStarted, (exitCode) =>
       @buildView.buildFinished(0 == exitCode)
       @child = null
-
-    @buildView.buildStarted()
+    )
 
   abort: (cb) ->
     @child.removeAllListeners 'close'
@@ -187,68 +181,7 @@ module.exports =
       params.fileName = params.fileBaseName.split "."
       if(params.fileName.length > 1)
         params.fileNameParsed = if (params.fileName.length > 2 && (!/^.+\-meta$/.test(params.fileName[1]))) then params.fileName[0]+'.'+params.fileName[1] else params.fileName[0]
-      params.metaDataType = null
-      switch params.folderName[0]
-        when 'classes'
-          params.metaDataType = 'ApexClass'
-        when 'triggers'
-          params.metaDataType = 'ApexTrigger'
-        when 'pages'
-          params.metaDataType = 'ApexPage'
-        when 'components'
-          params.metaDataType = 'ApexComponent'
-        when 'staticresources'
-          params.metaDataType = 'StaticResource'
-        when 'applications'
-          params.metaDataType = 'CustomApplication'
-        when 'objects'
-          params.metaDataType = 'CustomObject'
-        when 'tabs'
-          params.metaDataType = 'CustomTab'
-        when 'layouts'
-          params.metaDataType = 'Layout'
-        when 'quickActions'
-          params.metaDataType = 'QuickAction'
-        when 'profiles'
-          params.metaDataType = 'Profile'
-        when 'labels'
-          params.metaDataType = 'CustomLabels'
-        when 'workflows'
-          params.metaDataType = 'Workflow'
-        when 'remoteSiteSettings'
-          params.metaDataType = 'RemoteSiteSetting'
-        when 'permissionsets'
-          params.metaDataType = 'PermissionSet'
-        when 'letterhead'
-          params.metaDataType = 'Letterhead'
-        when 'translations'
-          params.metaDataType = 'Translations'
-        when 'groups'
-          params.metaDataType = 'Group'
-        when 'objectTranslations'
-          params.metaDataType = 'CustomObjectTranslation'
-        when 'communities'
-          params.metaDataType = 'Network'
-        when 'reportTypes'
-          params.metaDataType = 'ReportType'
-        when 'settings'
-          params.metaDataType = 'Settings'
-        when 'assignmentRules'
-          params.metaDataType = 'AssignmentRule'
-        when 'approvalProcesses'
-          params.metaDataType = 'ApprovalProcess'
-        when 'escalationRules'
-          params.metaDataType = 'EscalationRule'
-        when 'flows'
-          params.metaDataType = 'Flow'
-        when 'aura'
-          params.metaDataType = 'AuraDefinitionBundle'
-        when 'documents'
-          params.metaDataType = 'Document'
-        when 'email'
-          params.metaDataType = 'EmailTemplate'
-        else
-          params.metaDataType = null
+      params.metaDataType = utils.getMetaDataFromFolderName(params.folderName[0])
     return params
 
   processSingleFile: (optype, cmdtype) ->
@@ -352,25 +285,12 @@ module.exports =
       env: null
     }
 
-    @child = child_process.exec('git init', args)
-
-    @child.stdout.on 'data', @buildView.append
-    @child.stderr.on 'data', @buildView.append
-    @child.on "close", (exitCode) =>
-      #@buildView.buildFinished(0 == exitCode)
-      @child = child_process.exec('git remote add origin https://github.com/jonathanrico/forcedotcom-project.git', args)
-      @child.stdout.on 'data', @buildView.append
-      @child.stderr.on 'data', @buildView.append
-      @child.on "close", (exitCode) =>
-        @child = child_process.exec('git pull origin master', args)
-        @child.stdout.on 'data', @buildView.append
-        @child.stderr.on 'data', @buildView.append
-        @child.on "close", (exitCode) =>
-          utils.deleteFolderRecursive utils.getPlatformPath(newProjectPath + '/.git')
-          @child = child_process.exec('git init', args)
-          @child.stdout.on 'data', @buildView.append
-          @child.stderr.on 'data', @buildView.append
-          @child.on "close", (exitCode) =>
+    utils.runProcess(@child, @buildView, 'git init', args, null, @buildView.buildStarted, (exitcode) =>
+      utils.runProcess(@child, @buildView, 'git remote add origin https://github.com/jonathanrico/forcedotcom-project.git', args, null, null, (exitcode) =>
+        utils.runProcess(@child, @buildView, 'git pull origin master', args, null, null, (exitcode) =>
+          utils.runProcess(@child, @buildView, 'git init', args, () ->
+            utils.deleteFolderRecursive utils.getPlatformPath(newProjectPath + '/.git')
+          , null, (exitcode) =>
             fs.createReadStream(
               utils.getPlatformPath(newProjectPath + '/build/sample-sfdc-build.properties')
             ).pipe(
@@ -380,7 +300,10 @@ module.exports =
             atom.workspace.open(utils.getPlatformPath(newProjectPath + '/build/sfdc-build.properties'))
             @child = null
             @buildView.buildFinished(true)
-    @buildView.buildStarted()
+          )
+        )
+      )
+    )
 
   goToWiki: () ->
     shell.openExternal 'https://github.com/jonathanrico/forcedotcom-builder/wiki'
