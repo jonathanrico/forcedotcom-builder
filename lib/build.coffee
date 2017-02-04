@@ -1,9 +1,9 @@
 child_process = require 'child_process'
+shell = require 'shell'
 fs = require 'fs'
 qs = require 'querystring'
 pathModule = require 'path'
 remote = require "remote"
-dialog = remote.require "dialog"
 
 utils = require './utils'
 BuildView = require './build-view'
@@ -19,6 +19,7 @@ module.exports =
     @buildView = new BuildView()
 
     atom.commands.add 'atom-workspace', 'force.com:generate-project', => @generateProject()
+    atom.commands.add 'atom-workspace', 'force.com:go-to-wiki', => @goToWiki()
 
     atom.commands.add 'atom-workspace', 'force.com:deploy-project', => @getProjectPath("treeview-project", @deploy, null)
     atom.commands.add 'atom-workspace', 'force.com:deploy-static-res', => @getProjectPath("treeview-project", @deployStaticRes, null)
@@ -333,11 +334,13 @@ module.exports =
       callback()
 
   generateProject: () ->
-    newProjectPath = dialog.showOpenDialog({
+    newProjectPath = remote.dialog.showOpenDialog({
       title:'Create Project',
       buttonLabel:'Generate'
       properties:['openDirectory', 'createDirectory']
     });
+    if typeof newProjectPath == 'undefined'
+      return;
     newProjectPath = newProjectPath[0]
 
     args = {
@@ -378,3 +381,6 @@ module.exports =
             @child = null
             @buildView.buildFinished(true)
     @buildView.buildStarted()
+
+  goToWiki: () ->
+    shell.openExternal 'https://github.com/jonathanrico/forcedotcom-builder/wiki'
