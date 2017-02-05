@@ -17,6 +17,11 @@
   }
 ]
 'context-menu':
+    '.tree-view.full-menu.list-tree': [
+      { 'type': 'separator' }
+      { 'label': 'Generate Force.com Project', 'command': 'force.com:generate-project' }
+      { 'type': 'separator' }
+    ]
     '.tree-view.full-menu [is="tree-view-file"]': [
         {
             'label': 'Force.com Builder'
@@ -51,7 +56,14 @@
                 { 'label': 'New Apex Trigger', 'command': 'force.com:new-apex-trigger' }
                 { 'label': 'New Visualforce Page', 'command': 'force.com:new-vf-page' }
                 { 'label': 'New Visualforce Component', 'command': 'force.com:new-vf-component' }
+                { 'type': 'separator' }
+                { 'label': 'Create Custom Label', 'command': 'force.com:create-custom-label-project' }
             ]
         }
         { 'type': 'separator' }
+    ]
+    'atom-text-editor[data-grammar~="apex"], atom-text-editor[data-grammar~="visualforce"]': [
+      { 'type': 'separator' }
+      { 'label': 'Create Custom Label', 'command': 'force.com:create-custom-label-editor' }
+      { 'type': 'separator' }
     ]

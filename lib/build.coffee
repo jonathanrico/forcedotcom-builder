@@ -8,6 +8,7 @@ utils = require './utils'
 BuildView = require './build-view'
 SfCreatingDialog = require './sf-creating-dialog'
 ProjectDialog = require './project-dialog'
+CustomLabelDialog = require './custom-label-dialog'
 
 module.exports =
   config:
@@ -39,6 +40,9 @@ module.exports =
     atom.commands.add 'atom-workspace', 'force.com:new-apex-trigger', => @getProjectPath("treeview-project", @creatingDialog, ["Trigger"])
     atom.commands.add 'atom-workspace', 'force.com:new-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
     atom.commands.add 'atom-workspace', 'force.com:new-vf-component', => @getProjectPath("treeview-project", @creatingDialog, ["Component"])
+
+    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-editor', => @getProjectPath("editor", @createCustomLabel, ["editor"])
+    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-project', => @getProjectPath("treeview-project", @createCustomLabel, ["project"])
 
     atom.commands.add 'atom-workspace', 'force.com:abort', => @stop()
 
@@ -307,3 +311,10 @@ module.exports =
 
   goToWiki: () ->
     shell.openExternal 'https://github.com/jonathanrico/forcedotcom-builder/wiki'
+
+  createCustomLabel: (src) ->
+    new CustomLabelDialog(
+      src,
+      ((src == "editor") ? atom.workspace.getActiveTextEditor().getLastSelection() : null),
+      this
+    );

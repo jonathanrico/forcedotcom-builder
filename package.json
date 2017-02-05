@@ -23,7 +23,9 @@
       "force.com:new-apex-class",
       "force.com:new-apex-trigger",
       "force.com:new-vf-page",
-      "force.com:new-vf-component"
+      "force.com:new-vf-component",
+      "force.com:create-custom-label-editor",
+      "force.com:create-custom-label-project"
     ]
   },
   "repository": "https://github.com/jonathanrico/forcedotcom-builder",
