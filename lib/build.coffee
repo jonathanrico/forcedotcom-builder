@@ -315,12 +315,11 @@ module.exports =
   createCustomLabelDialog: (src) ->
     new CustomLabelDialog(
       src,
-      if src == "editor" then atom.workspace.getActiveTextEditor().getLastSelection() else null,
+      if src == "editor" then atom.workspace.getActiveTextEditor() else null,
       this
     );
 
   createCustomLabel: (customLabelDialog, callback) ->
-    #atom.workspace.open utils.createSfItem(sfCreatingDialog, @root)
-    console.log(customLabelDialog);
+    utils.insertCustomLabel customLabelDialog, @root, customLabelDialog.editor
     if callback
       callback()

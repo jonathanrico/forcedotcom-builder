@@ -3,12 +3,13 @@ CustomLabelDialogView = require './custom-label-dialog-view'
 module.exports =
   class CustomLabelDialog
 
-    constructor: (src, selection, builder) ->
+    constructor: (src, editor, builder) ->
       @type = src
-      @selection = selection
+      @editor = editor
       @builder = builder
 
-      if @selection
+      if @editor
+        @selection = @editor.getLastSelection()
         @label = @selection.getText()
       else
         @label = "Sample Label Text"

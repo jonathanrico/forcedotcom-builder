@@ -86,6 +86,31 @@ module.exports =
 
 #-----------
 
+  writeBeforeLastOccurance: () ->
+    [].push.call(arguments, "before")
+    @writePerformLastOccurence.apply null, arguments
+
+  writeAfterLastOccurance: () ->
+    [].push.call(arguments, "after")
+    @writePerformLastOccurence.apply null, arguments
+
+  writePerformLastOccurence: (path, findText, newText, successCallback, errorCallback, place) ->
+    if fs.existsSync path
+      fileData = fs.readFileSync path, 'utf8'
+      indexOcc = fileData.lastIndexOf findText
+      if indexOcc != -1
+        if place == "after"
+          indexOcc += findText.length
+        fileData = fileData.substr(0, indexOcc) + newText + fileData.substr(indexOcc)
+        fs.writeFileSync path, fileData, 'utf8'
+        if successCallback
+          successCallback()
+      else
+        if errorCallback
+          errorCallback()
+
+#-----------
+
   createSfItem: (sfCreatingDialog, root) ->
     itemParams = @getSfCreatingItemParams(sfCreatingDialog, root)
     @writeMeta itemParams
@@ -153,3 +178,56 @@ module.exports =
     if folderMapping.hasOwnProperty folderName
       result = folderMapping[folderName]
     result
+
+#-------------
+
+  getLabelMeta: (cl) ->
+    [
+      '    <labels>'
+      '        <fullName>' + cl.apiName + '</fullName>'
+      '        <categories>' + cl.categories + '</categories>'
+      '        <language>' + cl.language + '</language>'
+      '        <protected>true</protected>'
+      '        <shortDescription>' + cl.shortDesc + '</shortDescription>'
+      '        <value>' + cl.label + '</value>'
+      '    </labels>\n'
+    ].join('\n')
+
+  getLabelTranslationMeta: (cl) ->
+    [
+      '    <customLabels>'
+      '        <label><!-- ' + cl.label + ' --></label>'
+      '        <name>' + cl.apiName + '</name>'
+      '    </customLabels>\n'
+    ].join('\n')
+
+  insertLabelSelection: (cl, editor) ->
+    if editor
+      newText = null;
+      grammarName = editor.getGrammar().name
+      if grammarName == "Apex"
+        newText = 'Label.' + cl.apiName
+      else if grammarName == "Visualforce"
+        newText = '{!$Label.' + cl.apiName + '}'
+      if newText != null
+        editor.getLastSelection().insertText(newText, {"select" : true})
+
+  insertCustomLabel: (cl, root, editor) ->
+    labelsPath = @getPlatformPath root + '/src/labels/CustomLabels.labels'
+    utils = this
+    if fs.existsSync labelsPath
+      @writeBeforeLastOccurance(labelsPath, '</CustomLabels>', @getLabelMeta(cl), () =>
+        utils.insertLabelSelection cl, editor
+      ,null)
+
+      #Translations
+      translationsPath = @getPlatformPath root + '/src/translations/';
+      if fs.existsSync translationsPath
+        fs.readdir translationsPath, (err, items) ->
+          for i in items
+            if /^.+\.translation$/.test(i)
+              tPath = utils.getPlatformPath translationsPath + i
+              utils.writeAfterLastOccurance(tPath, '</customLabels>\n', utils.getLabelTranslationMeta(cl), null, () =>
+                utils.writeBeforeLastOccurance(tPath, '</Translations>', utils.getLabelTranslationMeta(cl), null, null)
+              )
+    fs.existsSync labelsPath
