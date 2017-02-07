@@ -9,7 +9,7 @@ module.exports =
 
       @label = itemType + ' Name';
       @apiName = itemType + '_Name';
-      @apiVersions = ["37.0", "36.0", "35.0"];
+      @apiVersions = ["39.0", "38.0", "37.0", "36.0"];
       @apiVersion = @apiVersions[0];
 
       @sfDialogView = new SfCreatingDialogView(this);
@@ -44,4 +44,3 @@ module.exports =
     create: (callback) ->
       if @creatingCheck
         @builder.createSfItem this, callback
-

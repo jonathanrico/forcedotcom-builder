@@ -315,6 +315,6 @@ module.exports =
   createCustomLabel: (src) ->
     new CustomLabelDialog(
       src,
-      ((src == "editor") ? atom.workspace.getActiveTextEditor().getLastSelection() : null),
+      if src == "editor" then atom.workspace.getActiveTextEditor().getLastSelection() else null,
       this
     );
