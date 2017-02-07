@@ -41,8 +41,8 @@ module.exports =
     atom.commands.add 'atom-workspace', 'force.com:new-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
     atom.commands.add 'atom-workspace', 'force.com:new-vf-component', => @getProjectPath("treeview-project", @creatingDialog, ["Component"])
 
-    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-editor', => @getProjectPath("editor", @createCustomLabel, ["editor"])
-    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-project', => @getProjectPath("treeview-project", @createCustomLabel, ["project"])
+    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-editor', => @getProjectPath("editor", @createCustomLabelDialog, ["editor"])
+    atom.commands.add 'atom-workspace', 'force.com:create-custom-label-project', => @getProjectPath("treeview-project", @createCustomLabelDialog, ["project"])
 
     atom.commands.add 'atom-workspace', 'force.com:abort', => @stop()
 
@@ -312,9 +312,15 @@ module.exports =
   goToWiki: () ->
     shell.openExternal 'https://github.com/jonathanrico/forcedotcom-builder/wiki'
 
-  createCustomLabel: (src) ->
+  createCustomLabelDialog: (src) ->
     new CustomLabelDialog(
       src,
       if src == "editor" then atom.workspace.getActiveTextEditor().getLastSelection() else null,
       this
     );
+
+  createCustomLabel: (customLabelDialog, callback) ->
+    #atom.workspace.open utils.createSfItem(sfCreatingDialog, @root)
+    console.log(customLabelDialog);
+    if callback
+      callback()
