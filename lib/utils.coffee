@@ -1,3 +1,4 @@
+child_process = require 'child_process'
 fs = require 'fs'
 
 module.exports =
@@ -85,6 +86,31 @@ module.exports =
 
 #-----------
 
+  writeBeforeLastOccurance: () ->
+    [].push.call(arguments, "before")
+    @writePerformLastOccurence.apply null, arguments
+
+  writeAfterLastOccurance: () ->
+    [].push.call(arguments, "after")
+    @writePerformLastOccurence.apply null, arguments
+
+  writePerformLastOccurence: (path, findText, newText, successCallback, errorCallback, place) ->
+    if fs.existsSync path
+      fileData = fs.readFileSync path, 'utf8'
+      indexOcc = fileData.lastIndexOf findText
+      if indexOcc != -1
+        if place == "after"
+          indexOcc += findText.length
+        fileData = fileData.substr(0, indexOcc) + newText + fileData.substr(indexOcc)
+        fs.writeFileSync path, fileData, 'utf8'
+        if successCallback
+          successCallback()
+      else
+        if errorCallback
+          errorCallback()
+
+#-----------
+
   createSfItem: (sfCreatingDialog, root) ->
     itemParams = @getSfCreatingItemParams(sfCreatingDialog, root)
     @writeMeta itemParams
@@ -101,3 +127,107 @@ module.exports =
         else
           fs.unlinkSync(curPath);
       fs.rmdirSync(path);
+
+#-----------
+
+  runProcess: (child, view, command, args, beforeCommand, afterCommand, onclose) ->
+    if beforeCommand
+      beforeCommand()
+    child = child_process.exec(command, args)
+    child.stdout.on 'data', view.append
+    child.stderr.on 'data', view.append
+    child.on "close", onclose
+    if afterCommand
+      afterCommand()
+
+#-----------
+
+  getMetaDataFromFolderName: (folderName) ->
+    folderMapping = {
+      'classes' : 'ApexClass'
+      ,'triggers' : 'ApexTrigger'
+      ,'pages' : 'ApexPage'
+      ,'components' : 'ApexComponent'
+      ,'staticresources' : 'StaticResource'
+      ,'applications' : 'CustomApplication'
+      ,'objects' : 'CustomObject'
+      ,'tabs' : 'CustomTab'
+      ,'layouts' : 'Layout'
+      ,'quickActions' : 'QuickAction'
+      ,'profiles' : 'Profile'
+      ,'labels' : 'CustomLabels'
+      ,'workflows' : 'Workflow'
+      ,'remoteSiteSettings' : 'RemoteSiteSetting'
+      ,'permissionsets' : 'PermissionSet'
+      ,'letterhead' : 'Letterhead'
+      ,'translations' : 'Translations'
+      ,'groups' : 'Group'
+      ,'objectTranslations' : 'CustomObjectTranslation'
+      ,'communities' : 'Network'
+      ,'reportTypes' : 'ReportType'
+      ,'settings' : 'Settings'
+      ,'assignmentRules' : 'AssignmentRule'
+      ,'approvalProcesses' : 'ApprovalProcess'
+      ,'escalationRules' : 'EscalationRule'
+      ,'flows' : 'Flow'
+      ,'aura' : 'AuraDefinitionBundle'
+      ,'documents' : 'Document'
+      ,'email' : 'EmailTemplate'
+    }
+    result = null
+    if folderMapping.hasOwnProperty folderName
+      result = folderMapping[folderName]
+    result
+
+#-------------
+
+  getLabelMeta: (cl) ->
+    [
+      '    <labels>'
+      '        <fullName>' + cl.apiName + '</fullName>'
+      '        <categories>' + cl.categories + '</categories>'
+      '        <language>' + cl.language + '</language>'
+      '        <protected>true</protected>'
+      '        <shortDescription>' + cl.shortDesc + '</shortDescription>'
+      '        <value>' + cl.label + '</value>'
+      '    </labels>\n'
+    ].join('\n')
+
+  getLabelTranslationMeta: (cl) ->
+    [
+      '    <customLabels>'
+      '        <label><!-- ' + cl.label + ' --></label>'
+      '        <name>' + cl.apiName + '</name>'
+      '    </customLabels>\n'
+    ].join('\n')
+
+  insertLabelSelection: (cl, editor) ->
+    if editor
+      newText = null;
+      grammarName = editor.getGrammar().name
+      if grammarName == "Apex"
+        newText = 'Label.' + cl.apiName
+      else if grammarName == "Visualforce"
+        newText = '{!$Label.' + cl.apiName + '}'
+      if newText != null
+        editor.getLastSelection().insertText(newText, {"select" : true})
+
+  insertCustomLabel: (cl, root, editor) ->
+    labelsPath = @getPlatformPath root + '/src/labels/CustomLabels.labels'
+    utils = this
+    if fs.existsSync labelsPath
+      @writeBeforeLastOccurance(labelsPath, '</CustomLabels>', @getLabelMeta(cl), () =>
+        utils.insertLabelSelection cl, editor
+      ,null)
+
+      #Translations
+      translationsPath = @getPlatformPath root + '/src/translations/';
+      if fs.existsSync translationsPath
+        fs.readdir translationsPath, (err, items) ->
+          for i in items
+            if /^.+\.translation$/.test(i)
+              tPath = utils.getPlatformPath translationsPath + i
+              utils.writeAfterLastOccurance(tPath, '</customLabels>\n', utils.getLabelTranslationMeta(cl), null, () =>
+                utils.writeBeforeLastOccurance(tPath, '</Translations>', utils.getLabelTranslationMeta(cl), null, null)
+              )
+    fs.existsSync labelsPath

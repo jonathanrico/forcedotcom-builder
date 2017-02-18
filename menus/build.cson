@@ -5,11 +5,6 @@
       'label': 'Force.com'
       'submenu': [
         { 'label': 'Generate Project', 'command': 'force.com:generate-project' }
-        { 'label': 'Deploy Current Project', 'command': 'force.com:deploy-project' }
-        { 'label': 'Deploy Static Resources', 'command': 'force.com:deploy-staticres'}
-        { 'label': 'Deploy Apex', 'command': 'force.com:deploy-apex' }
-        { 'label': 'Deploy Visualforce', 'command': 'force.com:deploy-visualforce'}
-        { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-project'}
         { 'type': 'separator' }
         { 'label': 'Go to the Wiki', 'command': 'force.com:go-to-wiki'}
       ]
@@ -17,6 +12,11 @@
   }
 ]
 'context-menu':
+    '.tree-view.full-menu.list-tree': [
+      { 'type': 'separator' }
+      { 'label': 'Generate Force.com Project', 'command': 'force.com:generate-project' }
+      { 'type': 'separator' }
+    ]
     '.tree-view.full-menu [is="tree-view-file"]': [
         {
             'label': 'Force.com Builder'
@@ -42,16 +42,24 @@
             'label': 'Force.com Builder'
             'submenu': [
                 { 'label': 'Deploy Current Project', 'command': 'force.com:deploy-project' }
-                { 'label': 'Deploy Static Resources', 'command': 'force.com:deploy-staticres' }
+                { 'label': 'Deploy Static Resources', 'command': 'force.com:deploy-static-res' }
                 { 'label': 'Deploy Apex', 'command': 'force.com:deploy-apex' }
                 { 'label': 'Deploy Visualforce', 'command': 'force.com:deploy-visualforce' }
+                { 'type': 'separator' }
                 { 'label': 'Retrieve Files', 'command': 'force.com:retrieve-project' }
                 { 'type': 'separator' }
                 { 'label': 'New Apex Class', 'command': 'force.com:new-apex-class' }
                 { 'label': 'New Apex Trigger', 'command': 'force.com:new-apex-trigger' }
                 { 'label': 'New Visualforce Page', 'command': 'force.com:new-vf-page' }
                 { 'label': 'New Visualforce Component', 'command': 'force.com:new-vf-component' }
+                { 'type': 'separator' }
+                { 'label': 'Create Custom Label', 'command': 'force.com:create-custom-label-project' }
             ]
         }
         { 'type': 'separator' }
+    ]
+    'atom-text-editor[data-grammar~="apex"], atom-text-editor[data-grammar~="visualforce"]': [
+      { 'type': 'separator' }
+      { 'label': 'Create Custom Label', 'command': 'force.com:create-custom-label-editor' }
+      { 'type': 'separator' }
     ]
