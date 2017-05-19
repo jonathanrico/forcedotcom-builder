@@ -48,8 +48,9 @@ module.exports =
 
   getProjectPath: (projectSelector, callback, callbackArgs) ->
     root = null
-    if (projectSelector == "treeview-project" && atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?)
-      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+    treeViewInstance = @getTreeView()
+    if (projectSelector == "treeview-project" && treeViewInstance.selectedPaths()?)
+      selectedPaths = treeViewInstance.selectedPaths()
       if (selectedPaths.length == 1)
         if (selectedPaths[0] in atom.project.getPaths())
           root = selectedPaths[0]
@@ -57,11 +58,11 @@ module.exports =
       if atom.workspace.getActiveTextEditor()?.getPath()?
         [root, relativePath] = atom.project.relativizePath(atom.workspace.getActiveTextEditor().getPath())
     else if (projectSelector == "treeview-single")
-      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+      selectedPaths = treeViewInstance.selectedPaths()
       if (selectedPaths.length == 1)
         [root, relativePath] = atom.project.relativizePath(selectedPaths[0])
     else if (projectSelector == "treeview-multiple")
-      selectedPaths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+      selectedPaths = treeViewInstance.selectedPaths()
       if (selectedPaths.length > 0)
         [tmpRoot, relativePath] = atom.project.relativizePath(selectedPaths[0])
         for selectedPath in selectedPaths
@@ -192,10 +193,11 @@ module.exports =
     if(@isDeployRunning())
       clearTimeout @finishedTimer
       path = null
+      treeViewInstance = @getTreeView()
       if(cmdtype == 'editor' && atom.workspace.getActiveTextEditor()?.buffer?.file?)
         path = atom.workspace.getActiveTextEditor().buffer.file.path
-      else if(cmdtype == 'treeview' && atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?)
-        path = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()[0]
+      else if(cmdtype == 'treeview' && treeViewInstance.selectedPaths()?)
+        path = treeViewInstance.selectedPaths()[0]
       if(path)
         projectPath = utils.getSrcPath(@root)
         fileParams = @getFileDetails(utils.isWin(), projectPath, path)
@@ -219,10 +221,11 @@ module.exports =
   processSeveralFiles: (optype) ->
     if(@isDeployRunning())
       clearTimeout @finishedTimer
-      if (atom.packages.getActivePackage('tree-view')?.mainModule.createView().selectedPaths()?.length > 0)
+      treeViewInstance = @getTreeView()
+      if (treeViewInstance.selectedPaths()?.length > 0)
           params = {}
           projectPath = utils.getSrcPath(@root)
-          paths = atom.packages.getActivePackage('tree-view').mainModule.createView().selectedPaths()
+          paths = treeViewInstance.selectedPaths()
           for key, path of paths
               fileParams = @getFileDetails(utils.isWin(), projectPath, path)
               if (fileParams? && fileParams.metaDataType? && fileParams.fileNameParsed?)
@@ -261,6 +264,14 @@ module.exports =
       return false
     else
       return true
+
+  getTreeView: ->
+    result = null;
+    if (atom.packages.getActivePackage('tree-view')?.mainModule.getTreeViewInstance?)
+      result = atom.packages.getActivePackage('tree-view').mainModule.getTreeViewInstance()
+    else if (atom.packages.getActivePackage('tree-view')?.mainModule.createView?)
+      result = atom.packages.getActivePackage('tree-view').mainModule.createView()
+    result;
 
   creatingDialog: (itemType) ->
     new SfCreatingDialog(itemType, this);
