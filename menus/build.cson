@@ -12,12 +12,12 @@
   }
 ]
 'context-menu':
-    '.tree-view.full-menu.list-tree': [
+    '.tree-view.full-menu.list-tree, .tree-view .full-menu.list-tree': [
       { 'type': 'separator' }
       { 'label': 'Generate Force.com Project', 'command': 'force.com:generate-project' }
       { 'type': 'separator' }
     ]
-    '.tree-view.full-menu [is="tree-view-file"]': [
+    '.tree-view.full-menu [is="tree-view-file"], .tree-view .full-menu [is="tree-view-file"]': [
         {
             'label': 'Force.com Builder'
             'submenu': [
@@ -27,7 +27,7 @@
         }
         { 'type': 'separator' }
     ]
-    '.tree-view.multi-select': [
+    '.tree-view.multi-select, .tree-view .multi-select': [
         {
             'label': 'Force.com Builder'
             'submenu': [
@@ -37,7 +37,7 @@
         }
         { 'type': 'separator' }
     ]
-    '.tree-view.full-menu .directory.project-root>.list-item': [
+    '.tree-view.full-menu .directory.project-root>.list-item, .tree-view .full-menu .directory.project-root>.list-item': [
         {
             'label': 'Force.com Builder'
             'submenu': [
