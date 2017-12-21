@@ -173,6 +173,9 @@ module.exports =
       ,'aura' : 'AuraDefinitionBundle'
       ,'documents' : 'Document'
       ,'email' : 'EmailTemplate'
+      ,'contentassets' : 'ContentAsset'
+      ,'globalValueSets' : 'GlobalValueSet'
+      ,'bots' : 'Bot'
     }
     result = null
     if folderMapping.hasOwnProperty folderName
