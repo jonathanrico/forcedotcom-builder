@@ -176,6 +176,7 @@ module.exports =
       ,'contentassets' : 'ContentAsset'
       ,'globalValueSets' : 'GlobalValueSet'
       ,'bots' : 'Bot'
+      ,'mlDomains' : 'MlDomain'
     }
     result = null
     if folderMapping.hasOwnProperty folderName
