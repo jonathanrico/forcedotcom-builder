@@ -175,8 +175,8 @@ module.exports =
       ,'email' : 'EmailTemplate'
       ,'contentassets' : 'ContentAsset'
       ,'globalValueSets' : 'GlobalValueSet'
-      ,'bots' : 'Bot'
       ,'mlDomains' : 'MlDomain'
+      ,'bots' : 'Bot'
     }
     result = null
     if folderMapping.hasOwnProperty folderName
