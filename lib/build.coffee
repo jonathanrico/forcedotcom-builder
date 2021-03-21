@@ -36,6 +36,7 @@ module.exports =
     atom.commands.add 'atom-workspace', 'force.com:deploy-selected-files', => @getProjectPath("treeview-multiple", @deploySeveralFiles, null)
     atom.commands.add 'atom-workspace', 'force.com:retrieve-selected-files', => @getProjectPath("treeview-multiple", @retrieveSeveralFiles, null)
 
+    atom.commands.add 'atom-workspace', 'force.com:new-lwc', => @getProjectPath("treeview-project", @creatingDialog, ["LightningComponentBundle"])
     atom.commands.add 'atom-workspace', 'force.com:new-apex-class', => @getProjectPath("treeview-project", @creatingDialog, ["Class"])
     atom.commands.add 'atom-workspace', 'force.com:new-apex-trigger', => @getProjectPath("treeview-project", @creatingDialog, ["Trigger"])
     atom.commands.add 'atom-workspace', 'force.com:new-vf-page', => @getProjectPath("treeview-project", @creatingDialog, ["Page"])
@@ -204,7 +205,7 @@ module.exports =
         if(fileParams != null)
           if(fileParams.metaDataType != null)
             params = [fileParams.fileNameParsed, fileParams.metaDataType, fileParams.folderName[0]]
-            if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document' || fileParams.metaDataType == 'EmailTemplate'
+            if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'Document' || fileParams.metaDataType == 'EmailTemplate' || fileParams.metaDataType == 'LightningComponentBundle'
                 params.push(fileParams.folderName[1])
             if @child then @abort(=> @startNewBuild(optype+'-single-file', params, 'buildSingle')) else @startNewBuild(optype+'-single-file', params, 'buildSingle')
           else
@@ -231,7 +232,7 @@ module.exports =
               if (fileParams? && fileParams.metaDataType? && fileParams.fileNameParsed?)
                   if !params[fileParams.metaDataType]?
                       params[fileParams.metaDataType] = {"fld" : fileParams.folderName[0],"items" : []}
-                  if fileParams.metaDataType == 'AuraDefinitionBundle'
+                  if fileParams.metaDataType == 'AuraDefinitionBundle' || fileParams.metaDataType == 'LightningComponentBundle'
                       if fileParams.folderName[1] not in params[fileParams.metaDataType].items && fileParams.folderName[1].length > 0
                           params[fileParams.metaDataType].items.push(fileParams.folderName[1])
                   else if fileParams.metaDataType == 'Document' || fileParams.metaDataType == 'EmailTemplate'

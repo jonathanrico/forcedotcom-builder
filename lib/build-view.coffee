@@ -7,8 +7,8 @@ class BuildView
     @messagepanel = new MessagePanelView title: 'Force.com Builder', rawTitle: false, recentMessagesAtTop: true
 
   addMessage: (msg, type) =>
+    @messagepanel.setTitle msg
     @messagepanel.add new PlainMessageView message: msg, className: type
-    @messagepanel.attach()
 
   reset: =>
     clearTimeout @titleTimer if @titleTimer
@@ -23,6 +23,7 @@ class BuildView
   buildStarted: =>
     @reset()
     @messagepanel.setTitle('Building...',true)
+    @messagepanel.attach()
 
   buildFinished: (success) =>
     text = if success then 'Build successful! :)' else 'Build failed :('
@@ -38,6 +39,7 @@ class BuildView
 
   buildAborted: =>
     @addMessage('Aborted','text-error')
+    @messagepanel.attach()
     atom.notifications.addWarning("Build aborted", dismissable: true)
     clearTimeout @titleTimer if @titleTimer
     @abortTimer = setTimeout @reset, 1000

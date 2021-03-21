@@ -16,7 +16,7 @@ module.exports =
       @apiName = @label.replace(/\s/g,'_').replace(/[^a-zA-Z0-9\_]/g,'');
       @shortDesc = @apiName;
       @language = "en_US";
-      @categories = "Learning General, Learning UI";
+      @categories = "Category 1, Category 2";
 
       @customLabelDialogView = new CustomLabelDialogView(this)
 

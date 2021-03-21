@@ -16,8 +16,8 @@ module.exports =
   getSfCreatingItemParams: (sfCreatingDialog, root) ->
     params = {}
     params.srcPath = @getSrcPath(root)
-    params.metaDataType = "Apex" + sfCreatingDialog.itemType
     if sfCreatingDialog.itemType == "Class"
+      params.metaDataType = "Apex" + sfCreatingDialog.itemType
       params.extension = "cls"
       params.fldPath = params.srcPath + @getPlatformPath('classes/')
       params.srcLines = ["public with sharing class " + sfCreatingDialog.apiName + " {\n    \n}"]
@@ -26,6 +26,7 @@ module.exports =
         "<status>Active</status>"
       ]
     else if sfCreatingDialog.itemType == "Trigger"
+      params.metaDataType = "Apex" + sfCreatingDialog.itemType
       params.extension = "trigger"
       params.fldPath = params.srcPath + @getPlatformPath('triggers/')
       params.srcLines = [
@@ -42,6 +43,7 @@ module.exports =
         "<status>Active</status>"
       ]
     else if sfCreatingDialog.itemType == "Page"
+      params.metaDataType = "Apex" + sfCreatingDialog.itemType
       params.extension = "page"
       params.fldPath = params.srcPath + @getPlatformPath('pages/')
       params.srcLines = ["<apex:page>\n    <h1>This is new page!</h1>\n</apex:page>"]
@@ -59,29 +61,55 @@ module.exports =
         "<apiVersion>" + sfCreatingDialog.apiVersion + "</apiVersion>"
         "<label>" + sfCreatingDialog.label + "</label>"
       ]
+    else if sfCreatingDialog.itemType == "LightningComponentBundle"
+      params.metaDataType = sfCreatingDialog.itemType
+      params.extension = "js"
+      params.fldPath = params.srcPath + @getPlatformPath('lwc/' + sfCreatingDialog.apiName + '/')
+      params.srcLines = ["import { LightningElement, track } from 'lwc';\n\nexport default class Hello extends LightningElement {\n    @track greeting = 'World';\n}"]
+      params.metaLines = [
+        "<apiVersion>" + sfCreatingDialog.apiVersion + "</apiVersion>"
+        "<isExposed>true</isExposed>"
+        "<targets>"
+        "    <target>lightning__AppPage</target>"
+        "    <target>lightning__RecordPage</target>"
+        "    <target>lightning__HomePage</target>"
+        "</targets>"
+      ]
+      params.extraFiles = [
+          {
+              srcFilePath: params.srcPath + @getPlatformPath('lwc/' + sfCreatingDialog.apiName + '/') + sfCreatingDialog.apiName + ".html"
+              srcLines: ["<template>\n    <lightning-card title=\"Hello\" icon-name=\"custom:custom14\">\n        <div class=\"slds-m-around_medium\">Hello, {greeting}!</div>\n    </lightning-card>\n</template>"]
+          }
+      ]
     params.srcFilePath = params.fldPath + sfCreatingDialog.apiName + "." + params.extension
     params.metaFilePath = params.srcFilePath + "-meta.xml"
     params
 
 #-----------
 
-  writeFile: (filePath, lines) ->
+  writeFile: (filePath, lines, dirName) ->
+    if dirName && !fs.existsSync(dirName)
+        fs.mkdirSync(dirName)
     fh = fs.createWriteStream filePath
     for line in lines
        fh.write(line + "\n")
     fh.end("")
 
   writeMeta: (itemParams) ->
-    lines = []
-    lines.push "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<" + itemParams.metaDataType + " xmlns=\"http://soap.sforce.com/2006/04/metadata\">"
-    for metaLine in itemParams.metaLines
-      lines.push "    " + metaLine
-    lines.push "</" + itemParams.metaDataType + ">"
-    @writeFile itemParams.metaFilePath, lines
-    itemParams.metaFilePath
+    if itemParams.metaLines
+        lines = []
+        lines.push "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<" + itemParams.metaDataType + " xmlns=\"http://soap.sforce.com/2006/04/metadata\">"
+        for metaLine in itemParams.metaLines
+          lines.push "    " + metaLine
+        lines.push "</" + itemParams.metaDataType + ">"
+        @writeFile itemParams.metaFilePath, lines, itemParams.fldPath
+        itemParams.metaFilePath
 
   writeSrc: (itemParams) ->
-    @writeFile itemParams.srcFilePath, itemParams.srcLines
+    @writeFile itemParams.srcFilePath, itemParams.srcLines, itemParams.fldPath
+    if itemParams.extraFiles
+        for extraItemParams in itemParams.extraFiles
+            @writeFile extraItemParams.srcFilePath, extraItemParams.srcLines, extraItemParams.fldPath
     itemParams.srcFilePath
 
 #-----------
@@ -171,6 +199,7 @@ module.exports =
       ,'escalationRules' : 'EscalationRule'
       ,'flows' : 'Flow'
       ,'aura' : 'AuraDefinitionBundle'
+      ,'lwc' : 'LightningComponentBundle'
       ,'documents' : 'Document'
       ,'email' : 'EmailTemplate'
       ,'contentassets' : 'ContentAsset'

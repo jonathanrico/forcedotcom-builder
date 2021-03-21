@@ -9,7 +9,7 @@ module.exports =
 
       @label = itemType + ' Name';
       @apiName = itemType + '_Name';
-      @apiVersions = ["39.0", "38.0", "37.0", "36.0"];
+      @apiVersions = ["51.0", "50.0", "49.0", "48.0"];
       @apiVersion = @apiVersions[0];
 
       @sfDialogView = new SfCreatingDialogView(this);
