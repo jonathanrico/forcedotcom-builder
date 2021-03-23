@@ -1,7 +1,7 @@
 {
   "name": "forcedotcom-builder",
   "main": "./lib/build",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Work on your Force.com projects, straight from Atom",
   "activationCommands": {
