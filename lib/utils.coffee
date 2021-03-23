@@ -206,6 +206,7 @@ module.exports =
       ,'globalValueSets' : 'GlobalValueSet'
       ,'mlDomains' : 'MlDomain'
       ,'bots' : 'Bot'
+      ,'messageChannels' : 'LightningMessageChannel'
     }
     result = null
     if folderMapping.hasOwnProperty folderName
